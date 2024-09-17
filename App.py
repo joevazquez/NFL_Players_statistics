@@ -2,7 +2,7 @@ import dash
 from dash import dcc, html, Input, Output
 import dash_bootstrap_components as dbc
 import plotly.express as px
-from config import get_data
+from Config import get_data
 
 # Crear la aplicación Dash
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
