@@ -39,6 +39,8 @@ VALUES
 ''')
 """
 
+# Incerta las temporadas por equipo que se tienen en los datasets
+"""
 cursor.execute('''
 INSERT INTO Seasons (Team_ID, Anio)
 VALUES
@@ -72,7 +74,7 @@ VALUES
     (18, 2023), (19, 2023), (20, 2023), (21, 2023), (22, 2023), (23, 2023), (24, 2023), (25, 2023), 
     (26, 2023), (27, 2023), (28, 2023), (29, 2023), (30, 2023), (31, 2023), (32, 2023);
 ''')
-
+"""
 
 # Confirmar los cambios
 conn.commit()
