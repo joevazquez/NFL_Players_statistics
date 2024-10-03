@@ -1,8 +1,15 @@
+import os
 from sqlalchemy import create_engine
 import pandas as pd
 
-# Configuración de la conexión a la base de datos PostgreSQL
-DATABASE_URI = 'postgresql://umefzpbv8c084ijirrmy:q7AXb6qsBEB1EgTbMvYSVieYUbSOnM@b1bua5kvmbuvwgwxle7r-postgresql.services.clever-cloud.com:50013/b1bua5kvmbuvwgwxle7r'
+# Obtener la ruta absoluta del directorio del proyecto
+project_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Definir la ruta relativa hacia el archivo de la base de datos
+db_path = os.path.join(project_dir, 'Database', 'NFL_database.db')
+
+# Configuración de la conexión a la base de datos SQLite
+DATABASE_URI = f'sqlite:///{db_path}'
 
 # Crear el motor de la base de datos
 engine = create_engine(DATABASE_URI)
