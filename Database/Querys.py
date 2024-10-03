@@ -37,27 +37,13 @@ else:
 print("----------------------------------------------------------------------------------------")
 
 # Definir la consulta SQL muestra todos los datos de la tabla Type
-query = "SELECT * FROM Seasons GROUP BY Anio"
+query = "SELECT * FROM Player_season"
 
 # Ejecutar la consulta
 df = get_data(query)
 
 # Imprimir los resultados
 if df.empty:
-    print("La tabla 'Seasons' está vacía.")
-else:
-    print(df)
-
-print("----------------------------------------------------------------------------------------")
-
-# Definir la consulta SQL muestra todos los datos de la tabla Type
-query = "SELECT * FROM Player"
-
-# Ejecutar la consulta
-df = get_data(query)
-
-# Imprimir los resultados
-if df.empty:
-    print("La tabla 'Player' está vacía.")
+    print("La tabla 'Player_season' está vacía.")
 else:
     print(df)

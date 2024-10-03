@@ -13,24 +13,15 @@ cursor.execute('''
     )
 ''')
 
-# Crear la tabla 'Player'
+# Crear la tabla 'Player_season'
 cursor.execute('''
-    CREATE TABLE IF NOT EXISTS Player (
+    CREATE TABLE IF NOT EXISTS Player_season (
         Player_ID INTEGER PRIMARY KEY AUTOINCREMENT,
         Team_ID INTEGER,
         Name TEXT NOT NULL,
         Posicion TEXT,
-        FOREIGN KEY (Team_ID) REFERENCES Teams (Team_ID)
-    )
-''')
-
-# Crear la tabla 'Seasons'
-cursor.execute('''
-    CREATE TABLE IF NOT EXISTS Seasons (
-        Season_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-        Player_ID INTEGER,
         Anio INTEGER,
-        FOREIGN KEY (Player_ID) REFERENCES Player (Player_ID)
+        FOREIGN KEY (Team_ID) REFERENCES Teams (Team_ID)
     )
 ''')
 
