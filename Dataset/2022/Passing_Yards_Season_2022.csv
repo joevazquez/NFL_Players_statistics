@@ -27,7 +27,7 @@ POS,Nombre,Team,POS,GP,CMP,ATT,YDS,LNG,TD,INT,SACK,SYL,Season
 26,Lamar Jackson ,BAL,QB,12,203,326,"2,242",75,17,7,26,114,2022
 26,Justin Fields ,CHI,QB,15,192,318,"2,242",56,17,11,55,359,2022
 28,Marcus Mariota ,ATL,QB,13,184,300,"2,219",75,15,9,28,195,2022
-29,Baker Mayfield ,CAR,QB,12,201,335,"2,163",75,10,8,36,217,2022
+29,Baker Mayfield ,LAR/CAR,QB,12,201,335,"2,163",75,10,8,36,217,2022
 30,Matthew Stafford ,LAR,QB,9,206,303,"2,087",75,10,8,29,208,2022
 31,Taylor Heinicke ,WSH,QB,9,161,259,"1,859",61,12,6,19,141,2022
 32,Carson Wentz ,WSH,QB,8,172,276,"1,755",75,11,9,26,159,2022
@@ -75,7 +75,7 @@ POS,Nombre,Team,POS,GP,CMP,ATT,YDS,LNG,TD,INT,SACK,SYL,Season
 74,Chase Daniel ,LAC,QB,4,8,12,52,13,1,0,1,1,2022
 75,Brian Hoyer ,NE,QB,1,5,6,37,27,0,0,1,8,2022
 76,C.J. Beathard ,JAX,QB,4,7,11,35,11,0,1,1,5,2022
-77,Christian McCaffrey ,CAR,RB,17,1,1,34,34,1,0,0,0,2022
+77,Christian McCaffrey ,SF/CAR,RB,17,1,1,34,34,1,0,0,0,2022
 77,Justin Jefferson ,MIN,WR,17,2,2,34,23,0,0,0,0,2022
 79,Tim Boyle ,CHI,QB,1,2,8,33,17,0,2,0,0,2022
 80,Blaine Gabbert ,TB,QB,1,6,8,29,13,1,0,0,0,2022
@@ -93,7 +93,7 @@ POS,Nombre,Team,POS,GP,CMP,ATT,YDS,LNG,TD,INT,SACK,SYL,Season
 90,Derrick Henry ,TEN,RB,16,2,2,4,3,1,0,0,0,2022
 90,Najee Harris ,PIT,RB,17,1,1,4,4,0,0,0,0,2022
 94,Braxton Berrios ,NYJ,WR,17,1,1,2,2,1,0,0,0,2022
-95,Chase Claypool ,CHI,WR,15,1,1,1,1,1,0,0,0,2022
+95,Chase Claypool ,PIT/CHI,WR,15,1,1,1,1,1,0,0,0,2022
 96,Chad Henne ,KC,QB,3,0,2,0,0,0,0,0,0,2022
 96,Rex Burkhead ,HOU,RB,16,0,1,0,0,0,0,0,0,2022
 96,Davante Adams ,LV,WR,17,0,0,0,0,0,0,1,10,2022
@@ -106,7 +106,7 @@ POS,Nombre,Team,POS,GP,CMP,ATT,YDS,LNG,TD,INT,SACK,SYL,Season
 96,Christian Kirk ,JAX,WR,17,0,1,0,0,0,0,0,0,2022
 96,Tommy Townsend ,KC,P,17,0,1,0,0,0,0,0,0,2022
 96,James Proche II ,BAL,WR,15,0,1,0,0,0,1,0,0,2022
-96,Lawrence Cager ,NYJ,TE,7,0,0,0,0,0,0,1,2,2022
+96,Lawrence Cager ,NYG/NYJ,TE,7,0,0,0,0,0,0,1,2,2022
 96,Jamie Gillan ,NYG,P,17,0,0,0,0,0,0,1,11,2022
 96,Cedrick Wilson Jr. ,MIA,WR,15,0,0,0,0,0,0,1,6,2022
 96,DeeJay Dallas ,SEA,RB,15,0,1,0,0,0,1,0,0,2022

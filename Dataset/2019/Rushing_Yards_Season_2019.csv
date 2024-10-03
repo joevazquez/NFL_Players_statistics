@@ -6,7 +6,7 @@ POS,Nombre,Team,POS,GP,ATT,YDS,LNG,BIG,TD,FUM,LST,FD,Season
 5,Chris Carson,SEA,RB,15,278,"1,230",59,8,7,6,3,75,2019
 6,Lamar Jackson,BAL,QB,15,176,"1,206",47,11,7,8,2,71,2019
 7,Leonard Fournette,JAX,RB,15,265,"1,152",81,7,3,0,0,55,2019
-8,Josh Jacobs,LV,RB,13,242,"1,150",51,8,7,1,1,53,2019
+8,Josh Jacobs,OAK,RB,13,242,"1,150",51,8,7,1,1,53,2019
 9,Joe Mixon,CIN,RB,16,278,"1,137",41,6,5,0,0,56,2019
 10,Dalvin Cook,MIN,RB,14,250,"1,135",75,7,13,3,2,60,2019
 11,Marlon Mack,IND,RB,14,247,"1,091",63,9,8,0,0,67,2019
@@ -49,7 +49,7 @@ POS,Nombre,Team,POS,GP,ATT,YDS,LNG,BIG,TD,FUM,LST,FD,Season
 48,Deshaun Watson,HOU,QB,15,82,413,30,2,7,6,1,29,2019
 49,Duke Johnson,HOU,RB,16,83,410,40,3,2,1,1,17,2019
 50,Kerryon Johnson,DET,RB,8,113,403,20,1,3,1,1,22,2019
-51,DeAndre Washington,LV,RB,16,108,387,36,1,3,0,0,23,2019
+51,DeAndre Washington,OAK,RB,16,108,387,36,1,3,0,0,23,2019
 52,Bo Scarbrough,DET,RB,6,89,377,30,2,1,1,1,15,2019
 53,Rashaad Penny,SEA,RB,10,65,370,58,4,3,1,1,16,2019
 54,David Johnson,ARI,RB,13,94,345,18,0,2,0,0,20,2019
@@ -93,7 +93,7 @@ POS,Nombre,Team,POS,GP,ATT,YDS,LNG,BIG,TD,FUM,LST,FD,Season
 92,Jeff Driskel,DET,QB,3,22,151,23,1,1,0,0,10,2019
 93,Matt Ryan,ATL,QB,15,34,147,12,0,1,1,1,10,2019
 93,Darrell Henderson Jr.,LAR,RB,13,39,147,22,1,0,0,0,10,2019
-95,Jalen Richard,LV,RB,16,39,145,13,0,0,0,0,10,2019
+95,Jalen Richard,OAK,RB,16,39,145,13,0,0,0,0,10,2019
 96,Baker Mayfield,CLE,QB,16,28,141,18,0,3,2,0,15,2019
 96,Darrel Williams,KC,RB,12,41,141,41,1,3,1,1,12,2019
 98,Chris Thompson,WSH,RB,11,37,138,16,0,0,0,0,7,2019
@@ -119,7 +119,7 @@ POS,Nombre,Team,POS,GP,ATT,YDS,LNG,BIG,TD,FUM,LST,FD,Season
 118,Trey Edmunds,PIT,RB,11,22,92,45,1,0,0,0,2,2019
 119,Jonathan Hilliman,NYG,RB,3,30,91,10,0,0,1,1,6,2019
 120,Steven Sims,WSH,WR,16,9,85,65,1,1,0,0,2,2019
-121,Derek Carr,LV,QB,16,27,82,15,0,2,6,3,7,2019
+121,Derek Carr,OAK,QB,16,27,82,15,0,2,6,3,7,2019
 122,Wendell Smallwood,WSH,RB,15,22,81,17,0,0,0,0,4,2019
 123,Jonnu Smith,TEN,TE,16,4,78,57,1,0,0,0,2,2019
 124,Ryan Finley,CIN,QB,3,10,77,24,1,0,0,0,4,2019
@@ -176,7 +176,7 @@ POS,Nombre,Team,POS,GP,ATT,YDS,LNG,BIG,TD,FUM,LST,FD,Season
 173,Robert Foster,BUF,WR,13,2,29,22,1,0,0,0,1,2019
 176,Kenjon Barner,ATL,RB,14,4,28,12,0,0,0,0,1,2019
 177,Julian Edelman,NE,WR,16,8,27,9,0,0,0,0,2,2019
-177,Derek Carrier,LV,TE,16,1,27,27,1,0,0,0,1,2019
+177,Derek Carrier,OAK,TE,16,1,27,27,1,0,0,0,1,2019
 177,Mike Davis,CAR,RB,12,13,27,8,0,0,0,0,0,2019
 177,Devine Ozigbo,JAX,RB,10,9,27,9,0,0,0,0,1,2019
 177,Dede Westbrook,JAX,WR,15,5,27,8,0,0,0,0,0,2019
@@ -203,7 +203,7 @@ POS,Nombre,Team,POS,GP,ATT,YDS,LNG,BIG,TD,FUM,LST,FD,Season
 200,Chester Rogers,IND,WR,12,1,18,18,0,0,0,0,1,2019
 203,Dare Ogunbowale,TB,RB,16,11,17,12,0,2,0,0,3,2019
 203,Courtland Sutton,DEN,WR,16,3,17,9,0,0,0,0,1,2019
-203,Alec Ingold,LV,FB,16,10,17,4,0,0,0,0,7,2019
+203,Alec Ingold,OAK,FB,16,10,17,4,0,0,0,0,7,2019
 203,C.J. Ham,MIN,FB,16,7,17,9,0,0,0,0,2,2019
 203,Mecole Hardman,KC,WR,16,4,17,9,0,0,0,0,1,2019
 208,Golden Tate,NYG,WR,11,1,16,16,0,0,0,0,1,2019
@@ -271,7 +271,7 @@ POS,Nombre,Team,POS,GP,ATT,YDS,LNG,BIG,TD,FUM,LST,FD,Season
 270,Antonio Brown,NE,WR,1,1,5,5,0,0,0,0,1,2019
 270,Colin Jones,CAR,S,16,1,5,5,0,0,0,0,1,2019
 270,De'Anthony Thomas,KC,WR,14,2,5,4,0,0,0,0,1,2019
-270,Darren Waller,LV,TE,16,2,5,7,0,0,0,0,0,2019
+270,Darren Waller,OAK,TE,16,2,5,7,0,0,0,0,0,2019
 270,Jakeem Grant Sr.,MIA,WR,10,4,5,7,0,1,0,0,1,2019
 270,Greg Ward,PHI,WR,7,1,5,5,0,0,0,0,0,2019
 270,Da'Mari Scott,NYG,WR,5,1,5,5,0,0,0,0,0,2019
@@ -282,11 +282,11 @@ POS,Nombre,Team,POS,GP,ATT,YDS,LNG,BIG,TD,FUM,LST,FD,Season
 277,Jamison Crowder,NYJ,WR,16,1,4,4,0,0,0,0,0,2019
 277,Cooper Kupp,LAR,WR,16,2,4,6,0,0,0,0,0,2019
 277,John Ross,CIN,WR,8,3,4,5,0,0,0,0,0,2019
-277,Erik Harris,LV,S,16,1,4,4,0,0,0,0,1,2019
+277,Erik Harris,OAK,S,16,1,4,4,0,0,0,0,1,2019
 285,James Develin,NE,FB,2,2,3,2,0,0,0,0,1,2019
 285,Senorise Perry,BUF,RB,11,3,3,6,0,0,0,0,0,2019
 285,Danny Vitale,GB,FB,15,1,3,3,0,0,0,0,0,2019
-285,Zay Jones,LV,WR,15,1,3,3,0,0,0,0,0,2019
+285,Zay Jones,OAK,WR,15,1,3,3,0,0,0,0,0,2019
 285,KeeSean Johnson,ARI,WR,10,1,3,3,0,0,0,0,0,2019
 285,Andrew Beck,DEN,FB,16,1,3,3,0,0,0,0,1,2019
 291,Brian Hoyer,IND,QB,4,8,2,6,0,0,0,0,0,2019
@@ -305,7 +305,7 @@ POS,Nombre,Team,POS,GP,ATT,YDS,LNG,BIG,TD,FUM,LST,FD,Season
 300,Trace McSorley,BAL,QB,1,1,1,1,0,0,0,0,1,2019
 305,Brett Kern,TEN,P,16,1,0,0,0,0,0,0,0,2019
 305,Marvin Jones Jr.,DET,WR,13,2,0,4,0,0,0,0,0,2019
-305,Mike Glennon,LV,QB,2,2,0,0,0,0,2,1,0,2019
+305,Mike Glennon,OAK,QB,2,2,0,0,0,0,2,1,0,2019
 305,Paul Richardson Jr.,WSH,WR,10,1,0,0,0,0,0,0,0,2019
 305,Chris Moore,BAL,WR,14,1,0,0,0,0,0,0,0,2019
 305,Quenton Nelson,IND,G,16,1,0,0,0,0,0,0,0,2019
