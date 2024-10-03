@@ -76,6 +76,8 @@ VALUES
 ''')
 """
 
+# Insertar los jugadores en la tabla Player
+"""
 # Ruta al archivo CSV dentro del proyecto
 csv_file_path = os.path.join(os.getcwd(), 'Dataset', 'nfl_players.csv')  # Ajusta esta ruta según tu estructura
 
@@ -101,7 +103,7 @@ for index, row in nfl_players_df.iterrows():
         INSERT INTO Player (Team_ID, Name, Posicion)
         VALUES (?, ?, ?)
         ''', (team_id[0], jugador, posicion))
-
+"""
 # Confirmar los cambios
 conn.commit()
 

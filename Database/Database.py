@@ -28,20 +28,9 @@ cursor.execute('''
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS Seasons (
         Season_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-        Team_ID INTEGER,
-        Anio INTEGER,
-        FOREIGN KEY (Team_ID) REFERENCES Teams (Team_ID)
-    )
-''')
-
-# Crear la tabla 'Season_players'
-cursor.execute('''
-    CREATE TABLE IF NOT EXISTS Season_players (
-        ID INTEGER PRIMARY KEY AUTOINCREMENT,
         Player_ID INTEGER,
-        Season_ID INTEGER,
-        FOREIGN KEY (Player_ID) REFERENCES Player (Player_ID),
-        FOREIGN KEY (Season_ID) REFERENCES Seasons (Season_ID)
+        Anio INTEGER,
+        FOREIGN KEY (Player_ID) REFERENCES Player (Player_ID)
     )
 ''')
 
@@ -57,13 +46,13 @@ cursor.execute('''
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS Statistics (
         ID INTEGER PRIMARY KEY AUTOINCREMENT,
-        Player_Season_ID INTEGER,
+        Season_ID INTEGER,
         Type_ID INTEGER,
         Games_played INTEGER,
         ATT INTEGER,
         Yards INTEGER,
         Touchdowns INTEGER,
-        FOREIGN KEY (Player_Season_ID) REFERENCES Season_players (ID),
+        FOREIGN KEY (Season_ID) REFERENCES Seasons (Season_ID),
         FOREIGN KEY (Type_ID) REFERENCES Type (ID)
     )
 ''')
