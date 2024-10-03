@@ -76,6 +76,32 @@ VALUES
 ''')
 """
 
+# Ruta al archivo CSV dentro del proyecto
+csv_file_path = os.path.join(os.getcwd(), 'Dataset', 'nfl_players.csv')  # Ajusta esta ruta según tu estructura
+
+# Cargar el archivo CSV
+nfl_players_df = pd.read_csv(csv_file_path)
+
+# Insertar los jugadores en la tabla Player
+for index, row in nfl_players_df.iterrows():
+    jugador = row['Nombre']
+    equipo = row['Team']
+    posicion = row['POS']
+    
+    # Obtener el Team_ID usando las iniciales del equipo
+    cursor.execute('''
+    SELECT Team_ID FROM Teams WHERE Team_initials = ?
+    ''', (equipo,))
+    
+    team_id = cursor.fetchone()
+    
+    if team_id:
+        # Si se encuentra el Team_ID, insertar el jugador
+        cursor.execute('''
+        INSERT INTO Player (Team_ID, Name, Posicion)
+        VALUES (?, ?, ?)
+        ''', (team_id[0], jugador, posicion))
+
 # Confirmar los cambios
 conn.commit()
 

@@ -47,3 +47,17 @@ if df.empty:
     print("La tabla 'Seasons' está vacía.")
 else:
     print(df)
+
+print("----------------------------------------------------------------------------------------")
+
+# Definir la consulta SQL muestra todos los datos de la tabla Type
+query = "SELECT * FROM Player"
+
+# Ejecutar la consulta
+df = get_data(query)
+
+# Imprimir los resultados
+if df.empty:
+    print("La tabla 'Player' está vacía.")
+else:
+    print(df)
