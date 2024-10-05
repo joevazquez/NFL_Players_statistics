@@ -37,7 +37,7 @@ else:
 print("----------------------------------------------------------------------------------------")
 
 # Definir la consulta SQL muestra todos los datos de la tabla Type
-query = "SELECT * FROM Player_season WHERE Name = 'J.K. Dobbins'"
+query = "SELECT * FROM Player_season"
 
 # Ejecutar la consulta
 df = get_data(query)
@@ -45,5 +45,19 @@ df = get_data(query)
 # Imprimir los resultados
 if df.empty:
     print("La tabla 'Player_season' está vacía.")
+else:
+    print(df)
+
+print("----------------------------------------------------------------------------------------")
+
+# Definir la consulta SQL muestra todos los datos de la tabla Type
+query = "SELECT * FROM Statistics"
+
+# Ejecutar la consulta
+df = get_data(query)
+
+# Imprimir los resultados
+if df.empty:
+    print("La tabla 'Statistics' está vacía.")
 else:
     print(df)
