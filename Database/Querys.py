@@ -36,9 +36,10 @@ else:
 
 print("----------------------------------------------------------------------------------------")
 
-# Definir la consulta SQL muestra todos los datos de la tabla Type
+# Definir la consulta SQL muestra todos los datos de la tabla de Player_season
 query = ('''SELECT * 
-         FROM Player_season''')
+         FROM Player_season
+         WHERE Name == "Jared Goff"''')
 
 # Ejecutar la consulta
 df = get_data(query)
@@ -53,7 +54,8 @@ print("-------------------------------------------------------------------------
 
 # Definir la consulta SQL muestra todos los datos de la tabla Type
 query = ('''SELECT * 
-         FROM Statistics''')
+         FROM Statistics 
+         WHERE Name == "Jared Goff"''')
 
 # Ejecutar la consulta
 df = get_data(query)

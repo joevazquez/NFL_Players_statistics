@@ -42,7 +42,7 @@ DROP TABLE Statistics;
 """
 # Crear la tabla 'Statistics'
 cursor.execute('''
-CREATE TABLE IF NOT EXISTS Statistics (
+CREATE TABLE  Statistics (
     ID INTEGER PRIMARY KEY AUTOINCREMENT,
     Name TEXT,
     Team_ID TEXT,
