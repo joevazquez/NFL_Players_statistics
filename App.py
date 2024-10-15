@@ -113,7 +113,7 @@ app = dash.Dash(__name__)
 
 # Layout de la aplicación
 app.layout = html.Div([
-    html.H1("Top 10 NFL Players by Statistics Type", style={'text-align': 'center'}),
+    html.H1("Estadísticas de la NFL", style={'text-align': 'center'}),
     
     # Dropdown para seleccionar el tipo de estadísticas
     dcc.Dropdown(
