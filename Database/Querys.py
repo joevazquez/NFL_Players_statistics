@@ -189,3 +189,4 @@ if df.empty:
     print("No se puede mostrar la información")
 else:
     print(df)
+
