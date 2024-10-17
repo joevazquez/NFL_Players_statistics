@@ -33,7 +33,7 @@ color_discrete_map = {
     'G': '#7FFF00',
 }
 
-# Consultas para los datos de Passing, Rushing y Receiving, obteniendo también el año desde Player_season
+# Querys para mostrar los datos en el dashboard
 query_passing = """
     SELECT ps.Posicion AS Position, COUNT(*) AS Count, ps.Anio AS Year
     FROM Statistics s
@@ -270,12 +270,11 @@ query_receiving_efficiency = ('''
         Attempts_Per_TD ASC;
 ''')
 
-# Inicializar la aplicación Dash con título personalizado y favicon
 app = dash.Dash(__name__)
-app.title = "Dashboard NFL"  # Cambia esto al nombre que deseas mostrar
+app.title = "Dashboard NFL" 
 
 
-app._favicon = 'nfl_logo.ico'  # Asegúrate de que el archivo 'favicon.ico' esté en la carpeta 'assets'
+app._favicon = 'nfl_logo.ico' 
 
 # Layout del dashboard
 app.layout = html.Div([
