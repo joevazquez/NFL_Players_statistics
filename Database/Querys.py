@@ -190,3 +190,156 @@ if df.empty:
 else:
     print(df)
 
+
+print("----------------------------------------------------------------------------------------")
+
+print('Jugadores más eficiente en pases')
+query = ('''
+WITH RankedData AS (
+    SELECT
+        ps.Name AS Name,
+        t.Team_name AS Team,
+        ps.Anio AS Year,
+        SUM(s.ATT) AS ATT,
+        SUM(s.Touchdowns) AS Touchdowns,
+        CASE WHEN SUM(s.Touchdowns) > 0 THEN ROUND(CAST(SUM(s.ATT) AS REAL) / SUM(s.Touchdowns), 2) ELSE NULL END AS Attempts_Per_TD,
+        ROW_NUMBER() OVER (PARTITION BY ps.Anio ORDER BY CASE WHEN SUM(s.Touchdowns) > 0 THEN ROUND(CAST(SUM(s.ATT) AS REAL) / SUM(s.Touchdowns), 2) ELSE NULL END ASC) AS rank
+    FROM
+        Statistics s
+    JOIN
+        Player_season ps ON s.Player_ID = ps.Player_ID
+    JOIN
+        Teams t ON ps.Team_ID = t.Team_ID
+    WHERE
+        s.Type_ID = 1 
+    GROUP BY
+        ps.Name, t.Team_name, ps.Anio
+    HAVING
+        SUM(s.Touchdowns) > 0 
+        AND SUM(s.ATT) >= 100 
+)
+SELECT
+    Name,
+    Team,
+    Year,
+    ATT,
+    Touchdowns,
+    Attempts_Per_TD
+FROM
+    RankedData
+WHERE
+    rank <= 10
+ORDER BY
+    Year ASC,
+    Attempts_Per_TD ASC;
+
+
+''')
+
+df = get_data(query)
+if df.empty:
+    print("No se puede mostrar la información")
+else:
+    print(df)
+
+print("----------------------------------------------------------------------------------------")
+
+print('Jugadores más eficiente en carrera')
+query = ('''
+WITH RankedData AS (
+    SELECT
+        ps.Name AS Name,
+        t.Team_name AS Team,
+        ps.Anio AS Year,
+        SUM(s.ATT) AS ATT,
+        SUM(s.Touchdowns) AS Touchdowns,
+        CASE WHEN SUM(s.Touchdowns) > 0 THEN ROUND(CAST(SUM(s.ATT) AS REAL) / SUM(s.Touchdowns), 2) ELSE NULL END AS Attempts_Per_TD,
+        ROW_NUMBER() OVER (PARTITION BY ps.Anio ORDER BY CASE WHEN SUM(s.Touchdowns) > 0 THEN ROUND(CAST(SUM(s.ATT) AS REAL) / SUM(s.Touchdowns), 2) ELSE NULL END ASC) AS rank
+    FROM
+        Statistics s
+    JOIN
+        Player_season ps ON s.Player_ID = ps.Player_ID
+    JOIN
+        Teams t ON ps.Team_ID = t.Team_ID
+    WHERE
+        s.Type_ID = 2 
+    GROUP BY
+        ps.Name, t.Team_name, ps.Anio
+    HAVING
+        SUM(s.Touchdowns) > 0 
+        AND SUM(s.ATT) >= 200 
+)
+SELECT
+    Name,
+    Team,
+    Year,
+    ATT,
+    Touchdowns,
+    Attempts_Per_TD
+FROM
+    RankedData
+WHERE
+    rank <= 10
+ORDER BY
+    Year ASC,
+    Attempts_Per_TD ASC;
+
+
+''')
+
+df = get_data(query)
+if df.empty:
+    print("No se puede mostrar la información")
+else:
+    print(df)
+
+print("----------------------------------------------------------------------------------------")
+
+print('Jugadores más eficiente en recepción')
+query = ('''
+WITH RankedData AS (
+    SELECT
+        ps.Name AS Name,
+        t.Team_name AS Team,
+        ps.Anio AS Year,
+        SUM(s.ATT) AS ATT,
+        SUM(s.Touchdowns) AS Touchdowns,
+        CASE WHEN SUM(s.Touchdowns) > 0 THEN ROUND(CAST(SUM(s.ATT) AS REAL) / SUM(s.Touchdowns), 2) ELSE NULL END AS Attempts_Per_TD,
+        ROW_NUMBER() OVER (PARTITION BY ps.Anio ORDER BY CASE WHEN SUM(s.Touchdowns) > 0 THEN ROUND(CAST(SUM(s.ATT) AS REAL) / SUM(s.Touchdowns), 2) ELSE NULL END ASC) AS rank
+    FROM
+        Statistics s
+    JOIN
+        Player_season ps ON s.Player_ID = ps.Player_ID
+    JOIN
+        Teams t ON ps.Team_ID = t.Team_ID
+    WHERE
+        s.Type_ID = 3 
+    GROUP BY
+        ps.Name, t.Team_name, ps.Anio
+    HAVING
+        SUM(s.Touchdowns) > 0 
+        AND SUM(s.ATT) >= 50 
+)
+SELECT
+    Name,
+    Team,
+    Year,
+    ATT,
+    Touchdowns,
+    Attempts_Per_TD
+FROM
+    RankedData
+WHERE
+    rank <= 10
+ORDER BY
+    Year ASC,
+    Attempts_Per_TD ASC;
+
+
+''')
+
+df = get_data(query)
+if df.empty:
+    print("No se puede mostrar la información")
+else:
+    print(df)
