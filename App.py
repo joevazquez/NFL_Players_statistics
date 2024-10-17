@@ -149,6 +149,127 @@ query_receiving_top = ('''
         Year, Total_Yards DESC;
 ''')
 
+query_passing_efficiency =('''
+    WITH RankedData AS (
+        SELECT
+            ps.Name AS Name,
+            t.Team_name AS Team,
+            ps.Anio AS Year,
+            SUM(s.ATT) AS ATT,
+            SUM(s.Touchdowns) AS Touchdowns,
+            CASE WHEN SUM(s.Touchdowns) > 0 THEN ROUND(CAST(SUM(s.ATT) AS REAL) / SUM(s.Touchdowns), 2) ELSE NULL END AS Attempts_Per_TD,
+            ROW_NUMBER() OVER (PARTITION BY ps.Anio ORDER BY CASE WHEN SUM(s.Touchdowns) > 0 THEN ROUND(CAST(SUM(s.ATT) AS REAL) / SUM(s.Touchdowns), 2) ELSE NULL END ASC) AS rank
+        FROM
+            Statistics s
+        JOIN
+            Player_season ps ON s.Player_ID = ps.Player_ID
+        JOIN
+            Teams t ON ps.Team_ID = t.Team_ID
+        WHERE
+            s.Type_ID = 1 
+        GROUP BY
+            ps.Name, t.Team_name, ps.Anio
+        HAVING
+            SUM(s.Touchdowns) > 0 
+            AND SUM(s.ATT) >= 100 
+    )
+    SELECT
+        Name,
+        Team,
+        Year,
+        ATT,
+        Touchdowns,
+        Attempts_Per_TD
+    FROM
+        RankedData
+    WHERE
+        rank <= 10
+    ORDER BY
+        Year ASC,
+        Attempts_Per_TD ASC;
+
+''')
+
+query_rushing_efficiency = ('''
+    WITH RankedData AS (
+        SELECT
+            ps.Name AS Name,
+            t.Team_name AS Team,
+            ps.Anio AS Year,
+            SUM(s.ATT) AS ATT,
+            SUM(s.Touchdowns) AS Touchdowns,
+            CASE WHEN SUM(s.Touchdowns) > 0 THEN ROUND(CAST(SUM(s.ATT) AS REAL) / SUM(s.Touchdowns), 2) ELSE NULL END AS Attempts_Per_TD,
+            ROW_NUMBER() OVER (PARTITION BY ps.Anio ORDER BY CASE WHEN SUM(s.Touchdowns) > 0 THEN ROUND(CAST(SUM(s.ATT) AS REAL) / SUM(s.Touchdowns), 2) ELSE NULL END ASC) AS rank
+        FROM
+            Statistics s
+        JOIN
+            Player_season ps ON s.Player_ID = ps.Player_ID
+        JOIN
+            Teams t ON ps.Team_ID = t.Team_ID
+        WHERE
+            s.Type_ID = 2 
+        GROUP BY
+            ps.Name, t.Team_name, ps.Anio
+        HAVING
+            SUM(s.Touchdowns) > 0 
+            AND SUM(s.ATT) >= 200 
+    )
+    SELECT
+        Name,
+        Team,
+        Year,
+        ATT,
+        Touchdowns,
+        Attempts_Per_TD
+    FROM
+        RankedData
+    WHERE
+        rank <= 10
+    ORDER BY
+        Year ASC,
+        Attempts_Per_TD ASC;
+''')
+
+query_receiving_efficiency = ('''
+    WITH RankedData AS (
+        SELECT
+            ps.Name AS Name,
+            t.Team_name AS Team,
+            ps.Anio AS Year,
+            SUM(s.ATT) AS ATT,
+            SUM(s.Touchdowns) AS Touchdowns,
+            CASE WHEN SUM(s.Touchdowns) > 0 THEN ROUND(CAST(SUM(s.ATT) AS REAL) / SUM(s.Touchdowns), 2) ELSE NULL END AS Attempts_Per_TD,
+            ROW_NUMBER() OVER (PARTITION BY ps.Anio ORDER BY CASE WHEN SUM(s.Touchdowns) > 0 THEN ROUND(CAST(SUM(s.ATT) AS REAL) / SUM(s.Touchdowns), 2) ELSE NULL END ASC) AS rank
+        FROM
+            Statistics s
+        JOIN
+            Player_season ps ON s.Player_ID = ps.Player_ID
+        JOIN
+            Teams t ON ps.Team_ID = t.Team_ID
+        WHERE
+            s.Type_ID = 3 
+        GROUP BY
+            ps.Name, t.Team_name, ps.Anio
+        HAVING
+            SUM(s.Touchdowns) > 0 
+            AND SUM(s.ATT) >= 50 
+    )
+    SELECT
+        Name,
+        Team,
+        Year,
+        ATT,
+        Touchdowns,
+        Attempts_Per_TD
+    FROM
+        RankedData
+    WHERE
+        rank <= 10
+    ORDER BY
+        Year ASC,
+        Attempts_Per_TD ASC;
+''')
+
 # Inicializar la aplicación Dash con título personalizado y favicon
 app = dash.Dash(__name__)
 app.title = "Dashboard NFL"  # Cambia esto al nombre que deseas mostrar
@@ -160,6 +281,7 @@ app._favicon = 'nfl_logo.ico'  # Asegúrate de que el archivo 'favicon.ico' est�
 app.layout = html.Div([
     html.H1("Estadísticas de la NFL", style={'text-align': 'center', 'padding-top': '30px'}),
     
+    # Muestra las gráficas de pie de las proporciones de las posiciones en las estadísticas
     html.Div([
         dcc.Dropdown(
             id='year-pie-chart',
@@ -174,10 +296,11 @@ app.layout = html.Div([
         html.Div(dcc.Graph(id='receiving-pie-chart'), style={'width': '33%', 'padding': '10px'}),
     ], style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}),
 
-html.H1("Top 10 jugadores por estadística", style={'text-align': 'center'}),
-    
+    # Tabla del top 10 de jugadores por estadística
+    html.H1("Top 10 jugadores por estadística", style={'text-align': 'center'}),
+
     dcc.Dropdown(
-        id='stat-type',
+        id='stat-type-top',
         options=[
             {'label': 'Passing', 'value': 'passing'},
             {'label': 'Rushing', 'value': 'rushing'},
@@ -188,11 +311,11 @@ html.H1("Top 10 jugadores por estadística", style={'text-align': 'center'}),
     ),
 
     dcc.Dropdown(
-        id='year-filter',
+        id='year-filter-top',
         placeholder='Select a Year',
         style={'width': '50%', 'margin': '10px auto'}
     ),
-    
+
     dash_table.DataTable(
         id='top-10-table',
         columns=[
@@ -203,16 +326,59 @@ html.H1("Top 10 jugadores por estadística", style={'text-align': 'center'}),
             {"name": "Total Touchdowns", "id": "Total_Touchdowns"}
         ],
         data=[],
-        style_table={'overflowX': 'auto', 'padding-bottom' : '25px',},
+        style_table={'overflowX': 'auto', 'padding-bottom': '25px'},
         style_cell={
             'textAlign': 'center',
-            'padding-bottom' : '5px',
+            'padding-bottom': '5px',
             'whiteSpace': 'normal',
         },
         page_size=10
-    ),  
+    ),
+
+    # Tabla de los jugadores más eficientes por estadística
+    html.H1("Top 10 jugadores más eficientes por estadística", style={'text-align': 'center'}),
+
+    dcc.Dropdown(
+        id='stat-type-efficiency',
+        options=[
+            {'label': 'Passing', 'value': 'passing'},
+            {'label': 'Rushing', 'value': 'rushing'},
+            {'label': 'Receiving', 'value': 'receiving'}
+        ],
+        value='passing',
+        style={'width': '50%', 'margin': '0 auto'}
+    ),
+
+    dcc.Dropdown(
+        id='year-filter-efficiency',
+        placeholder='Select a Year',
+        style={'width': '50%', 'margin': '10px auto'}
+    ),
+
+    dash_table.DataTable(
+        id='top-10-table-efficiency',
+        columns=[
+            {"name": "Name", "id": "Name"},
+            {"name": "Team", "id": "Team"},
+            {"name": "ATT", "id": "ATT"},
+            {"name": "Touchdowns", "id": "Touchdowns"},
+            {"name": "Attempts Per TD", "id": "Attempts_Per_TD"}
+        ],
+        data=[],
+        style_table={'overflowX': 'auto', 'padding-bottom': '25px'},
+        style_cell={
+            'textAlign': 'center',
+            'padding-bottom': '5px',
+            'whiteSpace': 'normal',
+        },
+        page_size=10
+    ), 
 ])
 
+# --------------------------------------------------------------------------------------------------------------------
+# Llamados para que muestre las tablas y funcionen los filtros
+
+# Gráfica de pie
 @app.callback(
     Output('year-pie-chart', 'options'),
     Input('year-pie-chart', 'value')
@@ -278,10 +444,10 @@ def update_pie_charts(selected_year):
 
 # Callback para actualizar el filtro de años basado en el tipo de estadísticas
 @app.callback(
-    Output('year-filter', 'options'),
-    Input('stat-type', 'value')
+    Output('year-filter-top', 'options'),
+    Input('stat-type-top', 'value')
 )
-def update_year_filter_options(selected_type):
+def update_year_filter_options_top(selected_type):
     if selected_type == 'passing':
         df = get_data(query_passing_top)
     elif selected_type == 'rushing':
@@ -290,14 +456,13 @@ def update_year_filter_options(selected_type):
         df = get_data(query_receiving_top)
 
     years = df['Year'].unique()
-    return [{'label': year, 'value': year} for year in years]
+    return [{'label': str(year), 'value': str(year)} for year in years]
 
-# Callback para actualizar la tabla basada en la selección del dropdown
 @app.callback(
     Output('top-10-table', 'data'),
-    [Input('stat-type', 'value'), Input('year-filter', 'value')]
+    [Input('stat-type-top', 'value'), Input('year-filter-top', 'value')]
 )
-def update_table(selected_type, selected_year):
+def update_top_10_table(selected_type, selected_year):
     if selected_type == 'passing':
         df = get_data(query_passing_top)
     elif selected_type == 'rushing':
@@ -306,9 +471,43 @@ def update_table(selected_type, selected_year):
         df = get_data(query_receiving_top)
 
     if selected_year:
-        df = df[df['Year'] == selected_year]
+        df = df[df['Year'] == int(selected_year)]
 
     return df.to_dict('records')
+
+# Tabla de eficiencia
+@app.callback(
+    Output('year-filter-efficiency', 'options'),
+    Input('stat-type-efficiency', 'value')
+)
+def update_year_filter_options_efficiency(selected_type):
+    if selected_type == 'passing':
+        df = get_data(query_passing_efficiency)
+    elif selected_type == 'rushing':
+        df = get_data(query_rushing_efficiency)
+    else:
+        df = get_data(query_receiving_efficiency)
+
+    years = df['Year'].unique()
+    return [{'label': str(year), 'value': str(year)} for year in years]
+
+@app.callback(
+    Output('top-10-table-efficiency', 'data'),
+    [Input('stat-type-efficiency', 'value'), Input('year-filter-efficiency', 'value')]
+)
+def update_top_10_efficiency_table(selected_type, selected_year):
+    if selected_type == 'passing':
+        df = get_data(query_passing_efficiency)
+    elif selected_type == 'rushing':
+        df = get_data(query_rushing_efficiency)
+    else:
+        df = get_data(query_receiving_efficiency)
+
+    if selected_year:
+        df = df[df['Year'] == int(selected_year)]
+
+    return df.to_dict('records')
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
