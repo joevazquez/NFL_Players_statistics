@@ -280,19 +280,19 @@ app._favicon = 'nfl_logo.ico'
 app.layout = html.Div([
     html.H1("Estadísticas de la NFL", style={'text-align': 'center', 'padding-top': '30px'}),
     
-    # Muestra las gráficas de pie de las proporciones de las posiciones en las estadísticas
+    # Muestra las gráficas de barras de las proporciones de las posiciones en las estadísticas
     html.Div([
         dcc.Dropdown(
-            id='year-pie-chart',
+            id='year-bar-chart',
             placeholder='Filtrar por año',
             style={'width': '30%', 'margin-left': 'auto'}
         )
     ], style={'display': 'flex', 'justify-content': 'flex-end', 'padding': '20px'}),
     
     html.Div([
-        html.Div(dcc.Graph(id='passing-pie-chart'), style={'width': '33%', 'padding': '10px'}),
-        html.Div(dcc.Graph(id='rushing-pie-chart'), style={'width': '33%', 'padding': '10px'}),
-        html.Div(dcc.Graph(id='receiving-pie-chart'), style={'width': '33%', 'padding': '10px'}),
+        html.Div(dcc.Graph(id='passing-bar-chart'), style={'width': '33%', 'padding': '10px'}),
+        html.Div(dcc.Graph(id='rushing-bar-chart'), style={'width': '33%', 'padding': '10px'}),
+        html.Div(dcc.Graph(id='receiving-bar-chart'), style={'width': '33%', 'padding': '10px'}),
     ], style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}),
 
     # Tabla del top 10 de jugadores por estadística
@@ -377,10 +377,10 @@ app.layout = html.Div([
 # --------------------------------------------------------------------------------------------------------------------
 # Llamados para que muestre las tablas y funcionen los filtros
 
-# Gráfica de pie
+# Gráfica de barras llamado para actualizar gráficas
 @app.callback(
-    Output('year-pie-chart', 'options'),
-    Input('year-pie-chart', 'value')
+    Output('year-bar-chart', 'options'),
+    Input('year-bar-chart', 'value')
 )
 def update_year_options(selected_year):
     df = get_data(query_passing)
@@ -388,12 +388,12 @@ def update_year_options(selected_year):
     return [{'label': str(year), 'value': str(year)} for year in sorted(years)]
 
 @app.callback(
-    [Output('passing-pie-chart', 'figure'),
-     Output('rushing-pie-chart', 'figure'),
-     Output('receiving-pie-chart', 'figure')],
-    [Input('year-pie-chart', 'value')]
+    [Output('passing-bar-chart', 'figure'),
+     Output('rushing-bar-chart', 'figure'),
+     Output('receiving-bar-chart', 'figure')],
+    [Input('year-bar-chart', 'value')]
 )
-def update_pie_charts(selected_year):
+def update_bar_charts(selected_year):
     data_passing = get_data(query_passing)
     data_rushing = get_data(query_rushing)
     data_receiving = get_data(query_receiving)
@@ -403,41 +403,32 @@ def update_pie_charts(selected_year):
         data_rushing = data_rushing[data_rushing['Year'] == int(selected_year)]
         data_receiving = data_receiving[data_receiving['Year'] == int(selected_year)]
 
-    fig_passing = px.pie(
+    fig_passing = px.bar(
         data_passing, 
-        names='Position', 
-        values='Count',
+        x='Position', 
+        y='Count',
         title=f'Estadísticas de pases por posición - {selected_year if selected_year else "All Years"}',
-        hole=0.4,
         color='Position',
         color_discrete_map=color_discrete_map
     )
-    fig_passing.update_traces(textinfo='percent+label', textposition='inside')
-    fig_passing.update_layout(showlegend=True, height=500)
 
-    fig_rushing = px.pie(
+    fig_rushing = px.bar(
         data_rushing, 
-        names='Position', 
-        values='Count',
+        x='Position', 
+        y='Count',
         title=f'Estadísticas de carreras por posición - {selected_year if selected_year else "All Years"}',
-        hole=0.4,
         color='Position',
         color_discrete_map=color_discrete_map
     )
-    fig_rushing.update_traces(textinfo='percent+label', textposition='inside')
-    fig_rushing.update_layout(showlegend=True, height=500)
 
-    fig_receiving = px.pie(
+    fig_receiving = px.bar(
         data_receiving, 
-        names='Position', 
-        values='Count',
+        x='Position', 
+        y='Count',
         title=f'Estadísticas de recepción por posición - {selected_year if selected_year else "All Years"}',
-        hole=0.4,
         color='Position',
         color_discrete_map=color_discrete_map
     )
-    fig_receiving.update_traces(textinfo='percent+label', textposition='inside')
-    fig_receiving.update_layout(showlegend=True, height=500)
 
     return fig_passing, fig_rushing, fig_receiving
 
