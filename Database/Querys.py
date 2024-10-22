@@ -343,3 +343,37 @@ if df.empty:
     print("No se puede mostrar la información")
 else:
     print(df)
+
+print("----------------------------------------------------------------------------------------")
+
+print('Trayectoria de los jugadores')
+query = ('''
+    SELECT
+        ps.Name AS Name,
+        t.Team_name AS Team,
+        ps.Anio AS Year,
+        SUM(s.ATT) AS ATT,
+        SUM(s.Touchdowns) AS Touchdowns,
+        CASE WHEN SUM(s.Touchdowns) > 0 THEN ROUND(CAST(SUM(s.ATT) AS REAL) / SUM(s.Touchdowns), 2) ELSE NULL END AS Attempts_Per_TD
+    FROM
+        Statistics s
+    JOIN
+        Player_season ps ON s.Player_ID = ps.Player_ID
+    JOIN
+        Teams t ON ps.Team_ID = t.Team_ID
+    WHERE
+        s.Type_ID = 3 -- Tipo de estadística (3 para recepciones, puedes cambiar según el tipo)
+    GROUP BY
+        ps.Name, t.Team_name, ps.Anio
+    HAVING
+        SUM(s.Touchdowns) > 0 
+        AND SUM(s.ATT) >= 50
+    ORDER BY
+        ps.Name ASC, ps.Anio ASC;
+''')
+
+df = get_data(query)
+if df.empty:
+    print("No se puede mostrar la información")
+else:
+    print(df)
