@@ -273,6 +273,42 @@ query_receiving_efficiency = ('''
         Attempts_Per_TD ASC;
 ''')
 
+# Diccionario de conversión de nombres de estados de español a abreviaturas en inglés
+state_conversion = {
+    'Arizona': 'AZ',
+    'Georgia': 'GA',
+    'Maryland': 'MD',
+    'Nueva York': 'NY',
+    'Carolina del Norte': 'NC',
+    'Illinois': 'IL',
+    'Ohio': 'OH',
+    'Texas': 'TX',
+    'Colorado': 'CO',
+    'Michigan': 'MI',
+    'Wisconsin': 'WI',
+    'Indiana': 'IN',
+    'Florida': 'FL',
+    'Misuri': 'MO',
+    'Nevada': 'NV',
+    'California': 'CA',
+    'Minnesota': 'MN',
+    'Massachusetts': 'MA',
+    'Luisiana': 'LA',
+    'Pensilvania': 'PA',
+    'Washington': 'WA',
+    'Tennessee': 'TN'
+}
+
+# Crear un diccionario inverso para mostrar los nombres completos en la tabla
+state_full_name = {v: k for k, v in state_conversion.items()}
+
+# Función para convertir los nombres de los estados a abreviaturas
+def convert_state_names(df):
+    df['Estado'] = df['Estado'].replace(state_conversion)
+    return df
+
+
+
 app = dash.Dash(__name__)
 app.title = "NFL Dashboard" 
 
@@ -394,7 +430,29 @@ app.layout = html.Div([
             'whiteSpace': 'normal',
         },
         page_size=10
-    ), 
+    ),
+
+     # Mapa de calor de campeonatos por estado
+    
+    html.H1("Mapa de campeonatos ganados por estado"),
+    html.Div([
+        html.Div([
+            dcc.Graph(id='heatmap-states'),
+        ],id='map'),
+        
+        html.Div([
+            dash_table.DataTable(
+                id='state-table',
+                columns=[
+                    {"name": "Inicial del Estado", "id": "Estado"},
+                    {"name": "Nombre Completo", "id": "Nombre Completo"}
+                ],
+                data=[],
+                style_table={'overflowX': 'auto', 'height': '400px', 'overflowY': 'auto'},
+                style_cell={'textAlign': 'center'},
+            )
+        ], id='table-map'),
+    ],id='content-map')
 ])
 
 # --------------------------------------------------------------------------------------------------------------------
@@ -565,6 +623,37 @@ def update_top_10_efficiency_table(selected_type, selected_year):
         df = df[df['Year'] == int(selected_year)]
 
     return df.to_dict('records')
+
+# -------------------------------------------------------------------------------------------------------------
+
+# Sacar la data y hacer el mapa de calor de los campeonatos por estado
+@app.callback(
+    [Output('heatmap-states', 'figure'), Output('state-table', 'data')],
+    Input('heatmap-states', 'id')
+)
+def update_heatmap_and_table(id):
+    query = "SELECT Estado, Titulos FROM Teams"
+    df_teams = get_data(query)
+    df_teams = convert_state_names(df_teams)
+    
+    # Agrupar por estado sumando los títulos en caso de que se repitan
+    df_teams = df_teams.groupby('Estado', as_index=False).sum()
+    
+    # Crear el mapa de calor con Plotly Express
+    fig = px.choropleth(
+        df_teams,
+        locations='Estado',  # Abreviaturas de los estados
+        locationmode="USA-states",  # Modo para los estados de EE.UU.
+        color='Titulos',  # Número de títulos ganados
+        color_continuous_scale="Blues",  # Escala de color
+        scope="usa",  # Limitar el mapa a Estados Unidos
+        labels={'Titulos': 'Títulos ganados'},  # Etiqueta para la barra de color
+    )
+    
+    # Crear la tabla de abreviaturas y nombres completos
+    table_data = [{"Estado": row['Estado'], "Nombre Completo": state_full_name[row['Estado']]} for index, row in df_teams.iterrows()]
+    
+    return fig, table_data
 
 
 if __name__ == '__main__':

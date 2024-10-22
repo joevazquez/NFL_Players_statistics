@@ -10,22 +10,12 @@ cursor.execute('''
     CREATE TABLE IF NOT EXISTS Teams (
         Team_ID INTEGER PRIMARY KEY AUTOINCREMENT,
         Team_name TEXT NOT NULL,
-        Team_initials TEXT
+        Team_initials TEXT,
+        Titulos INTEGER DEFAULT 0,
+        Estado TEXT
     )
 ''')
-"""
-# Actualizar tabla de Teams
 
-cursor.execute('''
-    ALTER TABLE Teams
-    ADD COLUMN Titulos INTEGER DEFAULT 0
-''')
-
-cursor.execute('''
-    ALTER TABLE Teams
-    ADD COLUMN Estado TEXT
-''')
-"""
 # Crear la tabla 'Player_season'
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS Player_season (
@@ -46,13 +36,6 @@ cursor.execute('''
     )
 ''')
 
-
-"""
-# Borrar tablas
-cursor.execute('''
-DROP TABLE Statistics;
-''')
-"""
 
 # Crear la tabla 'Statistics'
 cursor.execute('''
