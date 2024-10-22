@@ -9,9 +9,12 @@ import sqlite3
 db_path = './Database/NFL_database.db'
 
 # Función para obtener los datos de la base de datos
-def get_data(query):
+def get_data(query, params=None):
     conn = sqlite3.connect(db_path)
-    df = pd.read_sql(query, conn)
+    if params:
+        df = pd.read_sql(query, conn, params=params)
+    else:
+        df = pd.read_sql(query, conn)  
     conn.close()
     return df
 
@@ -295,9 +298,8 @@ app.layout = html.Div([
         html.Div(dcc.Graph(id='receiving-bar-chart'), style={'width': '33%', 'padding': '10px'}),
     ], style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}),
 
-    # Tabla del top 10 de jugadores por estadística
+    # Muestra la tabla del top 10 de jugadores por estadística
     html.H1("Top 10 jugadores por estadística", style={'text-align': 'center'}),
-
     dcc.Dropdown(
         id='stat-type-top',
         options=[
@@ -308,13 +310,11 @@ app.layout = html.Div([
         value='passing',
         style={'width': '50%', 'margin': '0 auto'}
     ),
-
     dcc.Dropdown(
         id='year-filter-top',
         placeholder='Select a Year',
         style={'width': '50%', 'margin': '10px auto'}
     ),
-
     dash_table.DataTable(
         id='top-10-table',
         columns=[
@@ -325,6 +325,8 @@ app.layout = html.Div([
             {"name": "Total Touchdowns", "id": "Total_Touchdowns"}
         ],
         data=[],
+        row_selectable='single',  # Permitir seleccionar una fila
+        selected_rows=[],  # Para manejar las filas seleccionadas
         style_table={'overflowX': 'auto', 'padding-bottom': '25px'},
         style_cell={
             'textAlign': 'center',
@@ -334,9 +336,11 @@ app.layout = html.Div([
         page_size=10
     ),
 
-    # Tabla de los jugadores más eficientes por estadística
-    html.H1("Top 10 jugadores más eficientes por estadística", style={'text-align': 'center'}),
+    # Aquí se mostrarán los detalles del jugador seleccionado
+    html.H1("Trayectoria del Jugador Seleccionado", style={'text-align': 'center'}),
+    html.Div(id='player-detail'),
 
+    # Mostrar tabla de eficiencia
     dcc.Dropdown(
         id='stat-type-efficiency',
         options=[
@@ -448,6 +452,7 @@ def update_year_filter_options_top(selected_type):
     years = df['Year'].unique()
     return [{'label': str(year), 'value': str(year)} for year in years]
 
+# Mostrar información de los jugadores top 10
 @app.callback(
     Output('top-10-table', 'data'),
     [Input('stat-type-top', 'value'), Input('year-filter-top', 'value')]
@@ -459,11 +464,39 @@ def update_top_10_table(selected_type, selected_year):
         df = get_data(query_rushing_top)
     else:
         df = get_data(query_receiving_top)
-
     if selected_year:
         df = df[df['Year'] == int(selected_year)]
 
     return df.to_dict('records')
+
+
+# Mostrar información de los jugadores seleccionados del top 10
+@app.callback(
+    Output('player-detail', 'children'),
+    [Input('top-10-table', 'selected_rows'), Input('top-10-table', 'data')]
+)
+def display_player_trajectory(selected_rows, data):
+    if selected_rows is not None and len(selected_rows) > 0:
+        player_name = data[selected_rows[0]]['Name']
+
+        query_player_trajectory = '''
+            SELECT ps.Anio AS Year, SUM(s.Yards) AS Total_Yards, SUM(s.Touchdowns) AS Total_Touchdowns, SUM(s.ATT) AS Intentos_Totales
+            FROM Statistics s
+            JOIN Player_season ps ON s.Player_ID = ps.Player_ID
+            WHERE ps.Name = ?
+            GROUP BY ps.Anio
+            ORDER BY ps.Anio ASC;
+        '''
+
+        df = get_data(query_player_trajectory, (player_name,))
+        df['Year'] = df['Year'].astype(str)
+
+        fig = px.line(df, x='Year', y=['Total_Yards', 'Intentos_Totales' , 'Total_Touchdowns'], title=f'Trayectoria de {player_name}', markers=True)
+
+        return dcc.Graph(figure=fig)
+
+    return html.Div("Selecciona un jugador para ver su trayectoria")
+
 
 # Tabla de eficiencia
 @app.callback(
