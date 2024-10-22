@@ -274,23 +274,42 @@ query_receiving_efficiency = ('''
 ''')
 
 app = dash.Dash(__name__)
-app.title = "Dashboard NFL" 
+app.title = "NFL Dashboard" 
 
 
 app._favicon = 'nfl_logo.ico' 
 
 # Layout del dashboard
 app.layout = html.Div([
-    html.H1("Estadísticas de la NFL", style={'text-align': 'center', 'padding-top': '30px'}),
+    html.H1("Estadísticas de la NFL", id='Title'),
     
     # Muestra las gráficas de barras de las proporciones de las posiciones en las estadísticas
     html.Div([
         dcc.Dropdown(
-            id='year-bar-chart',
-            placeholder='Filtrar por año',
-            style={'width': '30%', 'margin-left': 'auto'}
-        )
-    ], style={'display': 'flex', 'justify-content': 'flex-end', 'padding': '20px'}),
+        id='year-bar-chart',
+        placeholder='Filtrar por año'
+        ),
+
+        dcc.Dropdown(
+        id='position-filter',
+        placeholder='Filtrar por posición',
+        options=[
+            {'label': 'Quarterback (QB)', 'value': 'QB'},
+            {'label': 'Wide Receiver (WR)', 'value': 'WR'},
+            {'label': 'Running Back (RB)', 'value': 'RB'},
+            {'label': 'Tight End (TE)', 'value': 'TE'},
+            {'label': 'Fullback (FB)', 'value': 'FB'},
+            {'label': 'Punter (P)', 'value': 'P'},
+            {'label': 'Kicker (K)', 'value': 'K'},
+            {'label': 'Linebacker (LB)', 'value': 'LB'},
+            {'label': 'Cornerback (CB)', 'value': 'CB'},
+            {'label': 'Safety (S)', 'value': 'S'},
+            {'label': 'Defensive Tackle (DT)', 'value': 'DT'},
+            {'label': 'Offensive Tackle (OT)', 'value': 'OT'},
+            {'label': 'Center (C)', 'value': 'C'},
+            {'label': 'Guard (G)', 'value': 'G'}
+        ]),
+    ]),
     
     html.Div([
         html.Div(dcc.Graph(id='passing-bar-chart'), style={'width': '33%', 'padding': '10px'}),
@@ -299,22 +318,22 @@ app.layout = html.Div([
     ], style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}),
 
     # Muestra la tabla del top 10 de jugadores por estadística
-    html.H1("Top 10 jugadores por estadística", style={'text-align': 'center'}),
-    dcc.Dropdown(
+    html.H1("Top 10 Jugadores Por Estadística", style={'text-align': 'center'}),
+    html.Div([
+        dcc.Dropdown(
         id='stat-type-top',
         options=[
             {'label': 'Passing', 'value': 'passing'},
             {'label': 'Rushing', 'value': 'rushing'},
             {'label': 'Receiving', 'value': 'receiving'}
         ],
-        value='passing',
-        style={'width': '50%', 'margin': '0 auto'}
-    ),
-    dcc.Dropdown(
-        id='year-filter-top',
-        placeholder='Select a Year',
-        style={'width': '50%', 'margin': '10px auto'}
-    ),
+        value='passing'
+        ),
+        dcc.Dropdown(
+            id='year-filter-top',
+            placeholder='Select a Year'
+        ),
+    ]),
     dash_table.DataTable(
         id='top-10-table',
         columns=[
@@ -341,22 +360,22 @@ app.layout = html.Div([
     html.Div(id='player-detail'),
 
     # Mostrar tabla de eficiencia
-    dcc.Dropdown(
+    html.H1("Juagdores Más Eficientes Por Estadística"),
+    html.Div([
+        dcc.Dropdown(
         id='stat-type-efficiency',
         options=[
             {'label': 'Passing', 'value': 'passing'},
             {'label': 'Rushing', 'value': 'rushing'},
             {'label': 'Receiving', 'value': 'receiving'}
         ],
-        value='passing',
-        style={'width': '50%', 'margin': '0 auto'}
-    ),
-
-    dcc.Dropdown(
-        id='year-filter-efficiency',
-        placeholder='Select a Year',
-        style={'width': '50%', 'margin': '10px auto'}
-    ),
+        value='passing'
+        ),
+        dcc.Dropdown(
+            id='year-filter-efficiency',
+            placeholder='Select a Year',
+        ),
+    ]),
 
     dash_table.DataTable(
         id='top-10-table-efficiency',
@@ -381,7 +400,7 @@ app.layout = html.Div([
 # --------------------------------------------------------------------------------------------------------------------
 # Llamados para que muestre las tablas y funcionen los filtros
 
-# Gráfica de barras llamado para actualizar gráficas
+# Callback para actualizar las opciones de años
 @app.callback(
     Output('year-bar-chart', 'options'),
     Input('year-bar-chart', 'value')
@@ -391,22 +410,33 @@ def update_year_options(selected_year):
     years = df['Year'].unique()
     return [{'label': str(year), 'value': str(year)} for year in sorted(years)]
 
+# Callback para actualizar las gráficas de barras con el filtro por año y posición
 @app.callback(
     [Output('passing-bar-chart', 'figure'),
      Output('rushing-bar-chart', 'figure'),
      Output('receiving-bar-chart', 'figure')],
-    [Input('year-bar-chart', 'value')]
+    [Input('year-bar-chart', 'value'),
+     Input('position-filter', 'value')]  # Añadido el filtro de posición
 )
-def update_bar_charts(selected_year):
+def update_bar_charts(selected_year, selected_position):
+    # Obtener los datos
     data_passing = get_data(query_passing)
     data_rushing = get_data(query_rushing)
     data_receiving = get_data(query_receiving)
 
+    # Filtrar por año
     if selected_year:
         data_passing = data_passing[data_passing['Year'] == int(selected_year)]
         data_rushing = data_rushing[data_rushing['Year'] == int(selected_year)]
         data_receiving = data_receiving[data_receiving['Year'] == int(selected_year)]
 
+    # Filtrar por posición
+    if selected_position:
+        data_passing = data_passing[data_passing['Position'] == selected_position]
+        data_rushing = data_rushing[data_rushing['Position'] == selected_position]
+        data_receiving = data_receiving[data_receiving['Position'] == selected_position]
+
+    # Crear las gráficas
     fig_passing = px.bar(
         data_passing, 
         x='Position', 
@@ -495,7 +525,7 @@ def display_player_trajectory(selected_rows, data):
 
         return dcc.Graph(figure=fig)
 
-    return html.Div("Selecciona un jugador para ver su trayectoria")
+    return html.Div("Debes de seleccionar a un jugador de la tabla de Top 10 para ver su trayectoria", id='Select-player-text')
 
 
 # Tabla de eficiencia

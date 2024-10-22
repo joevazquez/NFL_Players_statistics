@@ -1,0 +1,69 @@
+body {
+    background-color: #f4f4f9;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+    padding-top: 20px;
+    font-size: 36px;
+}
+
+#year-bar-chart{
+    display: inline-block;
+    width: 10%;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    margin-left: 30px;
+    border: 2px solid #071df5;
+    cursor: pointer;
+}
+
+#position-filter{
+    display: inline-block;
+    width: 15%;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    margin-left: 30px;
+    border: 2px solid #071df5;
+    cursor: pointer; 
+}
+
+#stat-type-top, 
+#year-filter-top{
+    display: inline-block;
+    width: 10%;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    margin-left: 30px;
+    border: 2px solid #071df5;
+    cursor: pointer;
+}
+
+#stat-type-efficiency, 
+#year-filter-efficiency{
+    display: inline-block;
+    width: 10%;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    margin-left: 30px;
+    margin-top: 30px;
+    border: 2px solid #071df5;
+    cursor: pointer;
+}
+
+#Select-player-text{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size:larger;
+    margin-left: 50px;
+    color:red;
+}
+
+#Title{
+    text-align: center;
+    padding-top: 30px;
+
+}
