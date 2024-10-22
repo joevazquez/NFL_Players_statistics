@@ -315,7 +315,7 @@ app.layout = html.Div([
         html.Div(dcc.Graph(id='passing-bar-chart'), style={'width': '33%', 'padding': '10px'}),
         html.Div(dcc.Graph(id='rushing-bar-chart'), style={'width': '33%', 'padding': '10px'}),
         html.Div(dcc.Graph(id='receiving-bar-chart'), style={'width': '33%', 'padding': '10px'}),
-    ], style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}),
+    ], id='graph'),
 
     # Muestra la tabla del top 10 de jugadores por estadística
     html.H1("Top 10 Jugadores Por Estadística", style={'text-align': 'center'}),

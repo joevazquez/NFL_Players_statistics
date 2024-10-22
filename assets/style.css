@@ -65,3 +65,9 @@ h1 {
     padding-top: 30px;
 
 }
+
+#graph{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
