@@ -407,7 +407,7 @@ def update_bar_charts(selected_year):
         data_passing, 
         x='Position', 
         y='Count',
-        title=f'Estadísticas de pases por posición - {selected_year if selected_year else "All Years"}',
+        title=f'Estadísticas de pases por posición-{selected_year if selected_year else "All Years"}',
         color='Position',
         color_discrete_map=color_discrete_map
     )
@@ -416,7 +416,7 @@ def update_bar_charts(selected_year):
         data_rushing, 
         x='Position', 
         y='Count',
-        title=f'Estadísticas de carreras por posición - {selected_year if selected_year else "All Years"}',
+        title=f'Estadísticas de carreras por posición-{selected_year if selected_year else "All Years"}',
         color='Position',
         color_discrete_map=color_discrete_map
     )
@@ -425,7 +425,7 @@ def update_bar_charts(selected_year):
         data_receiving, 
         x='Position', 
         y='Count',
-        title=f'Estadísticas de recepción por posición - {selected_year if selected_year else "All Years"}',
+        title=f'Estadísticas de recepción por posición-{selected_year if selected_year else "All Years"}',
         color='Position',
         color_discrete_map=color_discrete_map
     )
