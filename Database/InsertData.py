@@ -3389,7 +3389,7 @@ for data in datos_a_insertar:
 
 print('Los jugadores se incertaron correctamente')
 print('-------------------------------------------------------------------------------------------------------------------------------------------------')
-"""
+
 
 # Incertar las estadísticas de los jugadores
 datos_a_insertar = [
@@ -8173,7 +8173,51 @@ for data in datos_a_insertar:
    ''', (nombre, equipo_id, posicion, juegos_jugados, att, yardas, long_play, touchdowns, player_id, type_id))
 
 print('Las estadisticas de los jugadores se cargaron exitosamente')
+"""
 
+teams_data = [
+    ('Arizona Cardinals', 2, 'Arizona'),
+    ('Atlanta Falcons', 0, 'Georgia'),
+    ('Baltimore Ravens', 2, 'Maryland'),
+    ('Buffalo Bills', 0, 'Nueva York'),
+    ('Carolina Panthers', 0, 'Carolina del Norte'),
+    ('Chicago Bears', 9, 'Illinois'),
+    ('Cincinnati Bengals', 0, 'Ohio'),
+    ('Cleveland Browns', 4, 'Ohio'),
+    ('Dallas Cowboys', 5, 'Texas'),
+    ('Denver Broncos', 3, 'Colorado'),
+    ('Detroit Lions', 4, 'Michigan'),
+    ('Green Bay Packers', 15, 'Wisconsin'),
+    ('Houston Texans', 0, 'Texas'),
+    ('Indianapolis Colts', 4, 'Indiana'),
+    ('Jacksonville Jaguars', 0, 'Florida'),
+    ('Kansas City Chiefs', 4, 'Misuri'),
+    ('Las Vegas Raiders', 3, 'Nevada'),
+    ('Los Angeles Chargers', 0, 'California'),
+    ('Los Angeles Rams', 4, 'California'),
+    ('Miami Dolphins', 2, 'Florida'),
+    ('Minnesota Vikings', 0, 'Minnesota'),
+    ('New England Patriots', 6, 'Massachusetts'),
+    ('New Orleans Saints', 1, 'Luisiana'),
+    ('New York Giants', 8, 'Nueva York'),
+    ('New York Jets', 1, 'Nueva York'),
+    ('Philadelphia Eagles', 4, 'Pensilvania'),
+    ('Pittsburgh Steelers', 6, 'Pensilvania'),
+    ('San Francisco 49ers', 5, 'California'),
+    ('Seattle Seahawks', 1, 'Washington'),
+    ('Tampa Bay Buccaneers', 2, 'Florida'),
+    ('Tennessee Titans', 0, 'Tennessee'),
+    ('Washington Commanders', 5, 'Maryland')
+]
+
+for team in teams_data:
+    cursor.execute('''
+        UPDATE Teams
+        SET Titulos = ?, Estado = ?
+        WHERE Team_name = ?
+    ''', (team[1], team[2], team[0]))
+
+print('Datos agregados con éxito')
 # Confirmar los cambios
 conn.commit(),
 

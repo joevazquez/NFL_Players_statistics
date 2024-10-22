@@ -436,6 +436,11 @@ def update_bar_charts(selected_year, selected_position):
         data_rushing = data_rushing[data_rushing['Position'] == selected_position]
         data_receiving = data_receiving[data_receiving['Position'] == selected_position]
 
+    # Ordenar los datos por la columna 'Count' de mayor a menor
+    data_passing = data_passing.sort_values(by='Count', ascending=False)
+    data_rushing = data_rushing.sort_values(by='Count', ascending=False)
+    data_receiving = data_receiving.sort_values(by='Count', ascending=False)
+
     # Crear las gráficas
     fig_passing = px.bar(
         data_passing, 

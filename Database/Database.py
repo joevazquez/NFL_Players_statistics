@@ -1,7 +1,8 @@
 import sqlite3
 
-# Conectar a la base de datos (o crearla si no existe)
-conn = sqlite3.connect('NFL_database.db')
+# Conectar a la base de datos
+db_path = './Database/NFL_database.db'
+conn = sqlite3.connect(db_path)
 cursor = conn.cursor()
 
 # Crear la tabla 'Teams'
@@ -12,7 +13,19 @@ cursor.execute('''
         Team_initials TEXT
     )
 ''')
+"""
+# Actualizar tabla de Teams
 
+cursor.execute('''
+    ALTER TABLE Teams
+    ADD COLUMN Titulos INTEGER DEFAULT 0
+''')
+
+cursor.execute('''
+    ALTER TABLE Teams
+    ADD COLUMN Estado TEXT
+''')
+"""
 # Crear la tabla 'Player_season'
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS Player_season (
@@ -33,13 +46,14 @@ cursor.execute('''
     )
 ''')
 
+
 """
 # Borrar tablas
 cursor.execute('''
 DROP TABLE Statistics;
 ''')
-
 """
+
 # Crear la tabla 'Statistics'
 cursor.execute('''
 CREATE TABLE  Statistics (
