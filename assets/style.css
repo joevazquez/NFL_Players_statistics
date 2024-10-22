@@ -17,7 +17,6 @@ h1 {
     width: 10%;
     border-radius: 5px;
     margin-bottom: 10px;
-    margin-left: 30px;
     border: 2px solid #071df5;
     cursor: pointer;
 }
@@ -27,7 +26,6 @@ h1 {
     width: 15%;
     border-radius: 5px;
     margin-bottom: 10px;
-    margin-left: 30px;
     border: 2px solid #071df5;
     cursor: pointer; 
 }

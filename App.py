@@ -309,7 +309,7 @@ app.layout = html.Div([
             {'label': 'Center (C)', 'value': 'C'},
             {'label': 'Guard (G)', 'value': 'G'}
         ]),
-    ]),
+    ], style={'display': 'flex', 'justify-content': 'flex-end', 'gap': '10px', 'padding': '20px'}),
     
     html.Div([
         html.Div(dcc.Graph(id='passing-bar-chart'), style={'width': '33%', 'padding': '10px'}),
