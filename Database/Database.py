@@ -57,6 +57,7 @@ CREATE TABLE  Statistics (
 );
 ''')
 
+
 # Guardar los cambios y cerrar la conexión
 conn.commit()
 conn.close()

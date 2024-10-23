@@ -1,33 +1,33 @@
-Equipo,Titulos,Estado
-('Arizona Cardinals',2,"'Arizona'),"
-('Atlanta Falcons',0,"'Georgia'),"
-('Baltimore Ravens',2,"'Maryland'),"
-('Buffalo Bills',0,"'Nueva York'),"
-('Carolina Panthers',0,"'Carolina del Norte'),"
-('Chicago Bears',9,"'Illinois'),"
-('Cincinnati Bengals',0,"'Ohio'),"
-('Cleveland Browns',4,"'Ohio'),"
-('Dallas Cowboys',5,"'Texas'),"
-('Denver Broncos',3,"'Colorado'),"
-('Detroit Lions',4,"'Michigan'),"
-('Green Bay Packers',15,"'Wisconsin'),"
-('Houston Texans',0,"'Texas'),"
-('Indianapolis Colts',4,"'Indiana'),"
-('Jacksonville Jaguars',0,"'Florida'),"
-('Kansas City Chiefs',4,"'Misuri'),"
-('Las Vegas Raiders',3,"'Nevada'),"
-('Los Angeles Chargers',0,"'California'),"
-('Los Angeles Rams',4,"'California'),"
-('Miami Dolphins',2,"'Florida'),"
-('Minnesota Vikings',0,"'Minnesota'),"
-('New England Patriots',6,"'Massachusetts'),"
-('New Orleans Saints',1,"'Luisiana'),"
-('New York Giants',8,"'Nueva York'),"
-('New York Jets',1,"'Nueva York'),"
-('Philadelphia Eagles',4,"'Pensilvania'),"
-('Pittsburgh Steelers',6,"'Pensilvania'),"
-('San Francisco 49ers',5,"'California'),"
-('Seattle Seahawks',1,"'Washington'),"
-('Tampa Bay Buccaneers',2,"'Florida'),"
-('Tennessee Titans',0,"'Tennessee'),"
-('Washington Commanders',5,"'Maryland'),"
+Equipo,Iniciales,Titulos,Subcampeonatos,Estado
+Arizona Cardinals,ARI,0,1,Arizona
+Atlanta Falcons,ATL,0,2,Georgia
+Baltimore Ravens,BAL,2,0,Maryland
+Buffalo Bills,BUF,0,4,Nueva York
+Carolina Panthers,CAR,0,2,Carolina del Norte
+Chicago Bears,CHI,1,1,Illinois
+Cincinnati Bengals,CIN,0,3,Ohio
+Cleveland Browns,CLE,0,0,Ohio
+Dallas Cowboys,DAL,5,3,Texas
+Denver Broncos,DEN,3,5,Colorado
+Detroit Lions,DET,0,0,Michigan
+Green Bay Packers,GB,4,1,Wisconsin
+Houston Texans,HOU,0,0,Texas
+Indianapolis Colts,IND,2,2,Indiana
+Jacksonville Jaguars,JAX,0,0,Florida
+Kansas City Chiefs,KC,4,2,Misuri
+Las Vegas Raiders,LVR,3,2,Nevada
+Los Angeles Chargers,LAC,0,1,California
+Los Angeles Rams,LAR,2,3,California
+Miami Dolphins,MIA,2,3,Florida
+Minnesota Vikings,MIN,0,4,Minnesota
+New England Patriots,NE,6,5,Massachusetts
+New Orleans Saints,NO,1,0,Luisiana
+New York Giants,NYG,4,1,Nueva York
+New York Jets,NYJ,1,0,Nueva York
+Philadelphia Eagles,PHI,1,3,Pensilvania
+Pittsburgh Steelers,PIT,6,2,Pensilvania
+San Francisco 49ers,SF,5,2,California
+Seattle Seahawks,SEA,1,2,Washington
+Tampa Bay Buccaneers,TB,2,0,Florida
+Tennessee Titans,TEN,0,1,Tennessee
+Washington Commanders,WAS,3,2,Maryland

@@ -8174,7 +8174,7 @@ for data in datos_a_insertar:
 
 print('Las estadisticas de los jugadores se cargaron exitosamente')
 """
-
+"""
 teams_data = [
     ('Arizona Cardinals', 2, 'Arizona'),
     ('Atlanta Falcons', 0, 'Georgia'),
@@ -8216,6 +8216,50 @@ for team in teams_data:
         SET Titulos = ?, Estado = ?
         WHERE Team_name = ?
     ''', (team[1], team[2], team[0]))
+"""
+teams_data = [
+    ('Arizona Cardinals', 2, 1),
+    ('Atlanta Falcons', 0, 2),
+    ('Baltimore Ravens', 2, 0),
+    ('Buffalo Bills', 0, 4),
+    ('Carolina Panthers', 0, 2),
+    ('Chicago Bears', 9, 1),
+    ('Cincinnati Bengals', 0, 3),
+    ('Cleveland Browns', 4, 0),
+    ('Dallas Cowboys', 5, 3),
+    ('Denver Broncos', 3, 5),
+    ('Detroit Lions', 4, 0),
+    ('Green Bay Packers', 15, 1),
+    ('Houston Texans', 0, 0),
+    ('Indianapolis Colts', 4, 2),
+    ('Jacksonville Jaguars', 0, 0),
+    ('Kansas City Chiefs', 4, 2),
+    ('Las Vegas Raiders', 3, 2),
+    ('Los Angeles Chargers', 0, 1),
+    ('Los Angeles Rams', 4, 3),
+    ('Miami Dolphins', 2, 3),
+    ('Minnesota Vikings', 0, 4),
+    ('New England Patriots', 6, 5),
+    ('New Orleans Saints', 1, 0),
+    ('New York Giants', 8, 1),
+    ('New York Jets', 1, 0),
+    ('Philadelphia Eagles', 4, 3),
+    ('Pittsburgh Steelers', 6, 2),
+    ('San Francisco 49ers', 5, 2),
+    ('Seattle Seahawks', 1, 2),
+    ('Tampa Bay Buccaneers', 2, 0),
+    ('Tennessee Titans', 0, 1),
+    ('Washington Commanders', 5, 2)
+]
+
+for team in teams_data:
+    cursor.execute('''
+        UPDATE Teams
+        SET Subtitulos = ?
+        WHERE Team_name = ?
+    ''', (team[2], team[0]))
+
+
 
 print('Datos agregados con éxito')
 # Confirmar los cambios
