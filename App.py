@@ -432,27 +432,54 @@ app.layout = html.Div([
         page_size=10
     ),
 
-     # Mapa de calor de campeonatos por estado
-    
     html.H1("Mapa de campeonatos ganados por estado"),
     html.Div([
         html.Div([
             dcc.Graph(id='heatmap-states'),
-        ],id='map'),
+        ], id='map'),
         
         html.Div([
             dash_table.DataTable(
-                id='state-table',
+                id='state-table-titles',
                 columns=[
                     {"name": "Inicial del Estado", "id": "Estado"},
                     {"name": "Nombre Completo", "id": "Nombre Completo"}
                 ],
                 data=[],
+                row_selectable='single',  # Permitir seleccionar una fila
+                selected_rows=[],  # Para manejar las filas seleccionadas
                 style_table={'overflowX': 'auto', 'height': '400px', 'overflowY': 'auto'},
                 style_cell={'textAlign': 'center'},
             )
-        ], id='table-map'),
-    ],id='content-map')
+        ], id='table-map-titles'),
+    ], id='content-map'),
+
+        html.Div(id='team-detail-champ', style={'padding-top': '20px'}),
+
+    html.H1("Mapa de subcampeonatos por estado"),
+    html.Div([
+        html.Div([
+            dcc.Graph(id='heatmap-subtitles'),
+        ], id='map-subtitles'),
+        
+        html.Div([
+            dash_table.DataTable(
+            id='state-table-subtitles',
+            columns=[
+                {"name": "Inicial del Estado", "id": "Estado"},
+                {"name": "Nombre Completo", "id": "Nombre Completo"},
+            ],
+            data=[],
+            row_selectable='single',  # Permitir seleccionar una fila
+            selected_rows=[],  # Para manejar las filas seleccionadas
+            style_table={'overflowX': 'auto', 'height': '400px', 'overflowY': 'auto'},
+            style_cell={'textAlign': 'center'},
+            )
+        ], id='table-map-subtitles'),
+    ], id='content-map-subtitles'),
+
+    html.Div(id='team-detail', style={'padding-top': '20px'})
+    
 ])
 
 # --------------------------------------------------------------------------------------------------------------------
@@ -626,35 +653,110 @@ def update_top_10_efficiency_table(selected_type, selected_year):
 
 # -------------------------------------------------------------------------------------------------------------
 
-# Sacar la data y hacer el mapa de calor de los campeonatos por estado
+# Callback para los campeonatos
 @app.callback(
-    [Output('heatmap-states', 'figure'), Output('state-table', 'data')],
+    [Output('heatmap-states', 'figure'), Output('state-table-titles', 'data')],
     Input('heatmap-states', 'id')
 )
-def update_heatmap_and_table(id):
-    query = "SELECT Estado, Titulos FROM Teams"
+def update_heatmap_and_table_titles(id):
+    query = "SELECT Estado, Titulos, Team_name FROM Teams"
     df_teams = get_data(query)
     df_teams = convert_state_names(df_teams)
     
-    # Agrupar por estado sumando los títulos en caso de que se repitan
-    df_teams = df_teams.groupby('Estado', as_index=False).sum()
+    df_teams_grouped = df_teams.groupby('Estado').agg({
+            'Titulos': 'sum',  
+            'Team_name': lambda x: ', '.join(x)  
+        }).reset_index()
     
-    # Crear el mapa de calor con Plotly Express
     fig = px.choropleth(
         df_teams,
-        locations='Estado',  # Abreviaturas de los estados
-        locationmode="USA-states",  # Modo para los estados de EE.UU.
-        color='Titulos',  # Número de títulos ganados
-        color_continuous_scale="Blues",  # Escala de color
-        scope="usa",  # Limitar el mapa a Estados Unidos
-        labels={'Titulos': 'Títulos ganados'},  # Etiqueta para la barra de color
+        locations='Estado',
+        locationmode="USA-states",
+        color='Titulos',
+        color_continuous_scale="Greens",
+        scope="usa",
+        labels={'Titulos': 'Títulos ganados'},
     )
     
-    # Crear la tabla de abreviaturas y nombres completos
-    table_data = [{"Estado": row['Estado'], "Nombre Completo": state_full_name[row['Estado']]} for index, row in df_teams.iterrows()]
-    
+    table_data = [{
+            "Estado": row['Estado'],
+            "Nombre Completo": state_full_name[row['Estado']],
+            "Equipos": row['Team_name']
+        } for index, row in df_teams_grouped.iterrows()]
+
     return fig, table_data
 
+@app.callback(
+    Output('team-detail-champ', 'children'),
+    [Input('state-table-titles', 'selected_rows'), Input('state-table-titles', 'data')]
+)
+def display_teams(selected_rows, data):
+    if selected_rows is not None and len(selected_rows) > 0:
+        selected_state = data[selected_rows[0]]['Estado']
+        equipos = data[selected_rows[0]]['Equipos']
+        return html.Div([
+            html.H3(f"Equipos del estado: {selected_state}"),
+            html.P(f"Equipos: {equipos}",id='Lista-equipos-champ')
+        ],id='Texto-equipo-map-champ')
+    return html.Div("Selecciona un estado de la tabla para ver los equipos.")
+
+# -------------------------------------------------------------------------------------------------------------
+
+# Callback para los subcampeonatos
+@app.callback(
+    [Output('heatmap-subtitles', 'figure'), Output('state-table-subtitles', 'data')],
+    Input('heatmap-subtitles', 'id')
+)
+def update_heatmap_and_table_subtitles(id):
+    try:
+        query = "SELECT Estado, Subtitulos, Team_name FROM Teams"
+        df_teams = get_data(query)
+        df_teams = convert_state_names(df_teams)
+        
+        df_teams_grouped = df_teams.groupby('Estado').agg({
+            'Subtitulos': 'sum',  # Sumar los subcampeonatos por estado
+            'Team_name': lambda x: ', '.join(x)  # Concatenar nombres de equipos
+        }).reset_index()
+
+        # Crear el mapa de calor de subcampeonatos
+        fig = px.choropleth(
+            df_teams_grouped,
+            locations='Estado',
+            locationmode="USA-states",
+            color='Subtitulos',
+            color_continuous_scale="Reds",
+            scope="usa",
+            labels={'Subtitulos': 'Subcampeonatos'},
+        )
+        
+        table_data = [{
+            "Estado": row['Estado'],
+            "Nombre Completo": state_full_name[row['Estado']],
+            "Equipos": row['Team_name']
+        } for index, row in df_teams_grouped.iterrows()]
+        
+        # Devolver el gráfico y la tabla
+        return fig, table_data
+    
+    except Exception as e:
+        # Si algo falla, devuelve un gráfico y tabla vacíos para evitar errores
+        print(f"Error: {e}")
+        fig = px.choropleth(locations=[], locationmode="USA-states", scope="usa")
+        return fig, []
+
+@app.callback(
+    Output('team-detail', 'children'),
+    [Input('state-table-subtitles', 'selected_rows'), Input('state-table-subtitles', 'data')]
+)
+def display_teams(selected_rows, data):
+    if selected_rows is not None and len(selected_rows) > 0:
+        selected_state = data[selected_rows[0]]['Estado']
+        equipos = data[selected_rows[0]]['Equipos']
+        return html.Div([
+            html.H3(f"Equipos del estado: {selected_state}"),
+            html.P(f"Equipos: {equipos}",id='Lista-equipos')
+        ],id='Texto-equipo-map')
+    return html.Div("Selecciona un estado de la tabla para ver los equipos.")
 
 if __name__ == '__main__':
     app.run_server(debug=True)
