@@ -698,7 +698,7 @@ def display_teams(selected_rows, data):
             html.H3(f"Equipos del estado: {selected_state}"),
             html.P(f"Equipos: {equipos}",id='Lista-equipos-champ')
         ],id='Texto-equipo-map-champ')
-    return html.Div("Selecciona un estado de la tabla para ver los equipos.")
+    return html.Div("Selecciona un estado de la tabla para ver los equipos.", id='Select-player-text')
 
 # -------------------------------------------------------------------------------------------------------------
 
@@ -756,7 +756,7 @@ def display_teams(selected_rows, data):
             html.H3(f"Equipos del estado: {selected_state}"),
             html.P(f"Equipos: {equipos}",id='Lista-equipos')
         ],id='Texto-equipo-map')
-    return html.Div("Selecciona un estado de la tabla para ver los equipos.")
+    return html.Div("Selecciona un estado de la tabla para ver los equipos.", id='Select-player-text')
 
 if __name__ == '__main__':
     app.run_server(debug=True)
