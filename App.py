@@ -2,6 +2,7 @@ import dash
 from dash import dcc, html, dash_table
 from dash.dependencies import Input, Output
 import pandas as pd
+import plotly.graph_objects as go
 import plotly.express as px
 import sqlite3
 
@@ -273,6 +274,25 @@ query_receiving_efficiency = ('''
         Attempts_Per_TD ASC;
 ''')
 
+# Destinos del mundo con distancias en yardas y sus coordenadas geográficas
+destinations = [
+    {"country": "Mexico", "distance": 140000, "coords": [-99.1332, 19.4326]},
+    {"country": "Canada", "distance": 100000, "coords": [-106.3468, 56.1304]},
+    {"country": "United Kingdom", "distance": 3700000, "coords": [-0.1276, 51.5074]},
+    {"country": "Japan", "distance": 7000000, "coords": [139.6917, 35.6895]},
+    {"country": "Australia", "distance": 9500000, "coords": [133.7751, -25.2744]}
+]
+
+# Coordenadas de partida Los Ángeles
+start_coords = [-118.2437, 34.0522]
+start_country = "USA"  # País de origen inicial
+
+query_total_rushing_yards = '''
+    SELECT SUM(s.Yards) as Total_Yards
+    FROM Statistics s
+    WHERE s.Type_ID = 2  -- 2 representa rushing (carreras)
+'''
+
 # Diccionario de conversión de nombres de estados de español a abreviaturas en inglés
 state_conversion = {
     'Arizona': 'AZ',
@@ -400,13 +420,13 @@ app.layout = html.Div([
                 data=[],
                 row_selectable='single',  # Permitir seleccionar una fila
                 selected_rows=[],  # Para manejar las filas seleccionadas
-                style_table={'overflowX': 'auto', 'height': '400px', 'overflowY': 'auto'},
+                style_table={'overflowX': 'auto', 'height': '350px', 'overflowY': 'auto'},
                 style_cell={'textAlign': 'center'},
-            )
+            ),
+            html.Div(id='team-detail-champ', style={'padding-top': '20px'}),
         ], id='table-map-titles'),
     ], id='content-map'),
 
-        html.Div(id='team-detail-champ', style={'padding-top': '20px'}),
 
     html.H1("Mapa de subcampeonatos por estado"),
     html.Div([
@@ -424,13 +444,12 @@ app.layout = html.Div([
             data=[],
             row_selectable='single',  # Permitir seleccionar una fila
             selected_rows=[],  # Para manejar las filas seleccionadas
-            style_table={'overflowX': 'auto', 'height': '400px', 'overflowY': 'auto'},
+            style_table={'overflowX': 'auto', 'height': '350px', 'overflowY': 'auto'},
             style_cell={'textAlign': 'center'},
-            )
+            ),
+            html.Div(id='team-detail', style={'padding-top': '20px'}),
         ], id='table-map-subtitles'),
     ], id='content-map-subtitles'),
-
-    html.Div(id='team-detail', style={'padding-top': '20px'}),
 
     # Mostrar tabla de eficiencia
     html.H1("Juagdores Más Eficientes Por Estadística"),
@@ -468,6 +487,27 @@ app.layout = html.Div([
         },
         page_size=10
     ),
+    
+        # Título y gráfico del globo terráqueo
+        html.H1("Recorrido Por El Mundo Con Las Yardas Por Carrera Totales"),
+        html.Div([
+            dcc.Graph(id='globe-comparison-graph'),
+            
+            # Tabla de trayectorias al lado del mapa
+            dash_table.DataTable(
+                id='trajectory-table',
+                columns=[
+                    {"name": "País de origen", "id": "País de origen"},
+                    {"name": "País destino", "id": "País destino"},
+                    {"name": "Yardas recorridas en ese punto", "id": "Yardas recorridas en ese punto"},
+                    {"name": "Yardas restantes del total", "id": "Yardas restantes del total"},
+                    {"name": "Yardas faltantes para el siguiente destino", "id": "Yardas faltantes para el siguiente destino"}
+                ],
+                data=[],
+
+                style_cell={'textAlign': 'center', 'whiteSpace': 'normal', 'height': 'auto'},
+            ),
+        ], style={'display': 'flex', 'justify-content': 'space-between', 'align-items': 'flex-start'}),
     
 ])
 
@@ -539,6 +579,8 @@ def update_bar_charts(selected_year):
 
     return fig_passing, fig_rushing, fig_receiving
 
+# -------------------------------------------------------------------------------------------------------------
+
 # Callback para actualizar el filtro de años basado en el tipo de estadísticas
 @app.callback(
     Output('year-filter-top', 'options'),
@@ -572,6 +614,7 @@ def update_top_10_table(selected_type, selected_year):
 
     return df.to_dict('records')
 
+# -------------------------------------------------------------------------------------------------------------
 
 # Mostrar información de los jugadores seleccionados del top 10
 @app.callback(
@@ -604,6 +647,7 @@ def display_player_trajectory(selected_rows, data):
     # Si no hay una selección activa, devolver un contenido vacío o un mensaje
     return html.Div("Selecciona un jugador de la tabla para ver su trayectoria.", id='Select-player-text')
 
+# -------------------------------------------------------------------------------------------------------------
 
 # Tabla de eficiencia
 @app.callback(
@@ -689,17 +733,21 @@ def display_teams(selected_rows, data):
 
 # -------------------------------------------------------------------------------------------------------------
 
-# Callback para los subcampeonatos
+# Callback para el mapa y la tabla de subcampeonatos
 @app.callback(
     [Output('heatmap-subtitles', 'figure'), Output('state-table-subtitles', 'data')],
     Input('heatmap-subtitles', 'id')
 )
 def update_heatmap_and_table_subtitles(id):
     try:
+        # Consulta para obtener los subcampeonatos y nombres de los equipos por estado
         query = "SELECT Estado, Subtitulos, Team_name FROM Teams"
         df_teams = get_data(query)
+        
+        # Convertir los nombres de los estados a abreviaturas
         df_teams = convert_state_names(df_teams)
         
+        # Agrupar por estado sumando los subcampeonatos y concatenando nombres de equipos
         df_teams_grouped = df_teams.groupby('Estado').agg({
             'Subtitulos': 'sum',  # Sumar los subcampeonatos por estado
             'Team_name': lambda x: ', '.join(x)  # Concatenar nombres de equipos
@@ -716,21 +764,22 @@ def update_heatmap_and_table_subtitles(id):
             labels={'Subtitulos': 'Subcampeonatos'},
         )
         
+        # Crear la tabla con los datos de subcampeonatos y equipos
         table_data = [{
             "Estado": row['Estado'],
             "Nombre Completo": state_full_name[row['Estado']],
             "Equipos": row['Team_name']
         } for index, row in df_teams_grouped.iterrows()]
         
-        # Devolver el gráfico y la tabla
         return fig, table_data
     
     except Exception as e:
-        # Si algo falla, devuelve un gráfico y tabla vacíos para evitar errores
+        # Si algo falla, devolver un gráfico y tabla vacíos
         print(f"Error: {e}")
         fig = px.choropleth(locations=[], locationmode="USA-states", scope="usa")
         return fig, []
 
+# Callback para mostrar los equipos del estado seleccionado
 @app.callback(
     Output('team-detail', 'children'),
     [Input('state-table-subtitles', 'selected_rows'), Input('state-table-subtitles', 'data')]
@@ -741,9 +790,121 @@ def display_teams(selected_rows, data):
         equipos = data[selected_rows[0]]['Equipos']
         return html.Div([
             html.H3(f"Equipos del estado: {selected_state}"),
-            html.P(f"Equipos: {equipos}",id='Lista-equipos')
-        ],id='Texto-equipo-map')
+            html.P(f"Equipos: {equipos}")
+        ])
     return html.Div("Selecciona un estado de la tabla para ver los equipos.", id='Select-player-text')
+
+# -------------------------------------------------------------------------------------------------------------
+
+# Función para obtener el total de yardas corridas por todos los jugadores
+def get_total_rushing_yards():
+    result = get_data(query_total_rushing_yards)
+    if not result.empty:
+        return result['Total_Yards'][0]
+    else:
+        return 0
+
+# Callback para actualizar el gráfico de globo terráqueo y la tabla de trayectorias
+@app.callback(
+    [Output('globe-comparison-graph', 'figure'), Output('trajectory-table', 'data')],
+    Input('globe-comparison-graph', 'id')
+)
+def update_globe_and_table(id):
+    # Obtener el total de yardas corridas
+    total_yards = get_total_rushing_yards()
+    
+    # Variables para almacenar los destinos alcanzados y no alcanzados
+    reached_destinations = []
+    unreached_destinations = []
+    
+    # Acumulador para las yardas recorridas en cada punto y restante
+    accumulated_distance = 0
+    remaining_yards = total_yards
+
+    # Listas para trayectorias completas y alcanzadas
+    lons_full = [start_coords[0]]
+    lats_full = [start_coords[1]]
+    lons_reached = [start_coords[0]]
+    lats_reached = [start_coords[1]]
+
+    # Lista para almacenar los datos de la tabla
+    table_data = []
+    
+    origin_country = start_country
+    for i, destination in enumerate(destinations):
+        distance_to_destination = destination["distance"]
+        accumulated_distance += distance_to_destination
+
+        # Calcular yardas restantes después de alcanzar el destino actual
+        remaining_yards -= distance_to_destination
+
+        # Calcular yardas faltantes para el siguiente destino
+        if i < len(destinations) - 1:
+            yards_needed_for_next = destinations[i + 1]["distance"]
+        else:
+            yards_needed_for_next = "N/A"
+
+        table_data.append({
+            "País de origen": origin_country,
+            "País destino": destination["country"],
+            "Yardas recorridas en ese punto": distance_to_destination,
+            "Yardas restantes del total": max(remaining_yards, 0),
+            "Yardas faltantes para el siguiente destino": yards_needed_for_next
+        })
+
+        # Actualizar las listas de trayectoria y país de origen
+        lons_full.append(destination["coords"][0])
+        lats_full.append(destination["coords"][1])
+        origin_country = destination["country"]
+
+        # Determinar si el destino es alcanzable
+        if accumulated_distance <= total_yards:
+            reached_destinations.append(destination)
+            lons_reached.append(destination["coords"][0])
+            lats_reached.append(destination["coords"][1])
+        else:
+            unreached_destinations.append(destination)
+
+    fig = go.Figure()
+
+    # Agregar la trayectoria completa en gris
+    fig.add_trace(go.Scattergeo(
+        lon=lons_full,
+        lat=lats_full,
+        mode='lines+markers',
+        line=dict(width=2, color="gray"),
+        marker=dict(size=5, color="gray"),
+        name="Ruta Completa",
+        text=[start_country] + [d["country"] for d in destinations],
+        hoverinfo="text"
+    ))
+
+    # Agregar la parte alcanzada en azul
+    fig.add_trace(go.Scattergeo(
+        lon=lons_reached,
+        lat=lats_reached,
+        mode='lines+markers+text',
+        line=dict(width=2, color="blue"),
+        marker=dict(size=5, color="blue"),
+        text=["Los Angeles, USA"] + [d["country"] for d in reached_destinations],
+        name="Parte Alcanzada",
+        hoverinfo="text"
+    ))
+
+    # Configurar la proyección del globo terráqueo
+    fig.update_geos(
+        projection_type="orthographic",
+        showcoastlines=True, coastlinecolor="Black",
+        showland=True, landcolor="lightgreen",
+        showocean=True, oceancolor="lightblue"
+    )
+
+    fig.update_layout(
+        title="Trayectoria Completa y Parte Alcanzada con Yardas Totales",
+        margin=dict(l=0, r=0, t=50, b=0)
+    )
+
+    return fig, table_data
 
 if __name__ == '__main__':
     app.run_server(debug=True)

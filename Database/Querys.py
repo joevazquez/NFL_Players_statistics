@@ -377,3 +377,16 @@ if df.empty:
     print("No se puede mostrar la información")
 else:
     print(df)
+
+print("----------------------------------------------------------------------------------------")
+
+query = ('''SELECT SUM(s.Yards) as Total_Yards
+    FROM Statistics s
+    WHERE s.Type_ID = 2  -- 2 representa rushing (carreras)''')
+df = get_data(query)
+if df.empty:
+    print("La tabla 'Player_season' está vacía.")
+else:
+    print(df)
+print("----------------------------------------------------------------------------------------")
+

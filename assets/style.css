@@ -56,7 +56,7 @@ h1 {
 #Select-player-text{
     font-family: Arial, Helvetica, sans-serif;
     font-size:larger;
-    margin-left: 50px;
+    margin-left: 10px;
     color:red;
     margin-top: 0px;
 }
@@ -116,4 +116,28 @@ h1 {
     display: inline-block;
     padding-top: -10px;
     vertical-align: top;
+}
+
+#globe{
+    display: flex;
+    justify-content: space-between;
+}
+
+#trajectory-table{
+    display: inline-block;
+    vertical-align: top;
+    width: 50%;
+    padding-left: 20px;
+    padding-right: 10px;
+}
+
+#globe-comparison-graph{
+    width: 50%;
+    display: inline-block;
+    padding-left: 20px;
+    padding-bottom: 50px;
+}
+
+#Title-globe{
+    text-align: center;
 }
