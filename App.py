@@ -326,25 +326,6 @@ app.layout = html.Div([
         placeholder='Filtrar por año'
         ),
 
-        dcc.Dropdown(
-        id='position-filter',
-        placeholder='Filtrar por posición',
-        options=[
-            {'label': 'Quarterback (QB)', 'value': 'QB'},
-            {'label': 'Wide Receiver (WR)', 'value': 'WR'},
-            {'label': 'Running Back (RB)', 'value': 'RB'},
-            {'label': 'Tight End (TE)', 'value': 'TE'},
-            {'label': 'Fullback (FB)', 'value': 'FB'},
-            {'label': 'Punter (P)', 'value': 'P'},
-            {'label': 'Kicker (K)', 'value': 'K'},
-            {'label': 'Linebacker (LB)', 'value': 'LB'},
-            {'label': 'Cornerback (CB)', 'value': 'CB'},
-            {'label': 'Safety (S)', 'value': 'S'},
-            {'label': 'Defensive Tackle (DT)', 'value': 'DT'},
-            {'label': 'Offensive Tackle (OT)', 'value': 'OT'},
-            {'label': 'Center (C)', 'value': 'C'},
-            {'label': 'Guard (G)', 'value': 'G'}
-        ]),
     ], style={'display': 'flex', 'justify-content': 'flex-end', 'gap': '10px', 'padding': '20px'}),
     
     html.Div([
@@ -370,67 +351,38 @@ app.layout = html.Div([
             placeholder='Select a Year'
         ),
     ]),
-    dash_table.DataTable(
-        id='top-10-table',
-        columns=[
-            {"name": "Team", "id": "Team"},
-            {"name": "Position", "id": "Position"},
-            {"name": "Name", "id": "Name"},
-            {"name": "Total Yards", "id": "Total_Yards"},
-            {"name": "Total Touchdowns", "id": "Total_Touchdowns"}
-        ],
-        data=[],
-        row_selectable='single',  # Permitir seleccionar una fila
-        selected_rows=[],  # Para manejar las filas seleccionadas
-        style_table={'overflowX': 'auto', 'padding-bottom': '25px'},
-        style_cell={
-            'textAlign': 'center',
-            'padding-bottom': '5px',
-            'whiteSpace': 'normal',
-        },
-        page_size=10
-    ),
-
-    # Aquí se mostrarán los detalles del jugador seleccionado
-    html.H1("Trayectoria del Jugador Seleccionado", style={'text-align': 'center'}),
-    html.Div(id='player-detail'),
-
-    # Mostrar tabla de eficiencia
-    html.H1("Juagdores Más Eficientes Por Estadística"),
+    # Contenedor para la tabla y la gráfica, colocados en la misma línea
     html.Div([
-        dcc.Dropdown(
-        id='stat-type-efficiency',
-        options=[
-            {'label': 'Passing', 'value': 'passing'},
-            {'label': 'Rushing', 'value': 'rushing'},
-            {'label': 'Receiving', 'value': 'receiving'}
-        ],
-        value='passing'
+    
+    # Columna de la tabla del top 10
+    html.Div([
+        dash_table.DataTable(
+            id='top-10-table',
+            columns=[
+                {"name": "Team", "id": "Team"},
+                {"name": "Position", "id": "Position"},
+                {"name": "Name", "id": "Name"},
+                {"name": "Total Yards", "id": "Total_Yards"},
+                {"name": "Total Touchdowns", "id": "Total_Touchdowns"}
+            ],
+            data=[],
+            row_selectable='single',
+            selected_rows=[],
+            style_table={'overflowX': 'auto', 'height': '400px'},  # Limitar la altura de la tabla
+            style_cell={
+                'textAlign': 'center',
+                'whiteSpace': 'normal',
+            },
+            page_size=10
         ),
-        dcc.Dropdown(
-            id='year-filter-efficiency',
-            placeholder='Select a Year',
-        ),
-    ]),
+    ], style={'width': '45%', 'display': 'inline-block', 'padding': '10px', 'vertical-align': 'top'}),
+    
+    # Columna para la gráfica de trayectoria del jugador seleccionado
+    html.Div([
+        html.Div(id='player-detail'),
+    ], id='chart-eficency')
 
-    dash_table.DataTable(
-        id='top-10-table-efficiency',
-        columns=[
-            {"name": "Name", "id": "Name"},
-            {"name": "Team", "id": "Team"},
-            {"name": "ATT", "id": "ATT"},
-            {"name": "Touchdowns", "id": "Touchdowns"},
-            {"name": "Attempts Per TD", "id": "Attempts_Per_TD"}
-        ],
-        data=[],
-        style_table={'overflowX': 'auto', 'padding-bottom': '25px'},
-        style_cell={
-            'textAlign': 'center',
-            'padding-bottom': '5px',
-            'whiteSpace': 'normal',
-        },
-        page_size=10
-    ),
+], style={'display': 'flex', 'justify-content': 'space-around'}),
 
     html.H1("Mapa de campeonatos ganados por estado"),
     html.Div([
@@ -478,7 +430,44 @@ app.layout = html.Div([
         ], id='table-map-subtitles'),
     ], id='content-map-subtitles'),
 
-    html.Div(id='team-detail', style={'padding-top': '20px'})
+    html.Div(id='team-detail', style={'padding-top': '20px'}),
+
+    # Mostrar tabla de eficiencia
+    html.H1("Juagdores Más Eficientes Por Estadística"),
+    html.Div([
+        dcc.Dropdown(
+        id='stat-type-efficiency',
+        options=[
+            {'label': 'Passing', 'value': 'passing'},
+            {'label': 'Rushing', 'value': 'rushing'},
+            {'label': 'Receiving', 'value': 'receiving'}
+        ],
+        value='passing'
+        ),
+        dcc.Dropdown(
+            id='year-filter-efficiency',
+            placeholder='Select a Year',
+        ),
+    ]),
+
+    dash_table.DataTable(
+        id='top-10-table-efficiency',
+        columns=[
+            {"name": "Name", "id": "Name"},
+            {"name": "Team", "id": "Team"},
+            {"name": "ATT", "id": "ATT"},
+            {"name": "Touchdowns", "id": "Touchdowns"},
+            {"name": "Attempts Per TD", "id": "Attempts_Per_TD"}
+        ],
+        data=[],
+        style_table={'overflowX': 'auto', 'padding-bottom': '25px'},
+        style_cell={
+            'textAlign': 'center',
+            'padding-bottom': '5px',
+            'whiteSpace': 'normal',
+        },
+        page_size=10
+    ),
     
 ])
 
@@ -495,15 +484,14 @@ def update_year_options(selected_year):
     years = df['Year'].unique()
     return [{'label': str(year), 'value': str(year)} for year in sorted(years)]
 
-# Callback para actualizar las gráficas de barras con el filtro por año y posición
+# Callback para actualizar las gráficas de barras con el filtro por año 
 @app.callback(
     [Output('passing-bar-chart', 'figure'),
      Output('rushing-bar-chart', 'figure'),
      Output('receiving-bar-chart', 'figure')],
-    [Input('year-bar-chart', 'value'),
-     Input('position-filter', 'value')]  # Añadido el filtro de posición
+    [Input('year-bar-chart', 'value')]  
 )
-def update_bar_charts(selected_year, selected_position):
+def update_bar_charts(selected_year):
     # Obtener los datos
     data_passing = get_data(query_passing)
     data_rushing = get_data(query_rushing)
@@ -515,11 +503,6 @@ def update_bar_charts(selected_year, selected_position):
         data_rushing = data_rushing[data_rushing['Year'] == int(selected_year)]
         data_receiving = data_receiving[data_receiving['Year'] == int(selected_year)]
 
-    # Filtrar por posición
-    if selected_position:
-        data_passing = data_passing[data_passing['Position'] == selected_position]
-        data_rushing = data_rushing[data_rushing['Position'] == selected_position]
-        data_receiving = data_receiving[data_receiving['Position'] == selected_position]
 
     # Ordenar los datos por la columna 'Count' de mayor a menor
     data_passing = data_passing.sort_values(by='Count', ascending=False)
@@ -596,6 +579,7 @@ def update_top_10_table(selected_type, selected_year):
     [Input('top-10-table', 'selected_rows'), Input('top-10-table', 'data')]
 )
 def display_player_trajectory(selected_rows, data):
+    # Comprobar si hay una fila seleccionada
     if selected_rows is not None and len(selected_rows) > 0:
         player_name = data[selected_rows[0]]['Name']
 
@@ -611,11 +595,14 @@ def display_player_trajectory(selected_rows, data):
         df = get_data(query_player_trajectory, (player_name,))
         df['Year'] = df['Year'].astype(str)
 
-        fig = px.line(df, x='Year', y=['Total_Yards', 'Intentos_Totales' , 'Total_Touchdowns'], title=f'Trayectoria de {player_name}', markers=True)
+        # Crear la gráfica de trayectoria del jugador
+        fig = px.line(df, x='Year', y=['Total_Yards', 'Intentos_Totales', 'Total_Touchdowns'], 
+                      title=f'Trayectoria de {player_name}', markers=True)
 
         return dcc.Graph(figure=fig)
 
-    return html.Div("Debes de seleccionar a un jugador de la tabla de Top 10 para ver su trayectoria", id='Select-player-text')
+    # Si no hay una selección activa, devolver un contenido vacío o un mensaje
+    return html.Div("Selecciona un jugador de la tabla para ver su trayectoria.", id='Select-player-text')
 
 
 # Tabla de eficiencia
