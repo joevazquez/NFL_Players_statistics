@@ -443,7 +443,7 @@ app.layout = html.Div([
             ],
             data=[],
             row_selectable='single',  # Permitir seleccionar una fila
-            selected_rows=[0],  # Para manejar las filas seleccionadas
+            selected_rows=[0],  
             style_table={'overflowX': 'auto', 'height': '350px', 'overflowY': 'auto'},
             style_cell={'textAlign': 'center'},
             ),
