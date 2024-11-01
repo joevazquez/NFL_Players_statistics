@@ -387,7 +387,7 @@ app.layout = html.Div([
             ],
             data=[],
             row_selectable='single',
-            selected_rows=[],
+            selected_rows=[0],
             style_table={'overflowX': 'auto', 'height': '400px'},  # Limitar la altura de la tabla
             style_cell={
                 'textAlign': 'center',
@@ -419,7 +419,7 @@ app.layout = html.Div([
                 ],
                 data=[],
                 row_selectable='single',  # Permitir seleccionar una fila
-                selected_rows=[],  # Para manejar las filas seleccionadas
+                selected_rows=[0],
                 style_table={'overflowX': 'auto', 'height': '350px', 'overflowY': 'auto'},
                 style_cell={'textAlign': 'center'},
             ),
@@ -443,7 +443,7 @@ app.layout = html.Div([
             ],
             data=[],
             row_selectable='single',  # Permitir seleccionar una fila
-            selected_rows=[],  # Para manejar las filas seleccionadas
+            selected_rows=[0],  # Para manejar las filas seleccionadas
             style_table={'overflowX': 'auto', 'height': '350px', 'overflowY': 'auto'},
             style_cell={'textAlign': 'center'},
             ),
